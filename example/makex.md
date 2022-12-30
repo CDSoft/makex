@@ -11,7 +11,7 @@ toc-own-page: true
 # LuaX and pandoc based tools
 
 `makex.mk` is a Makefile. It is intended to be included in any Makefile to
-easily install some tools based on LuaX and Pandoc to preproces files and
+easily install some tools based on LuaX and Pandoc to pre-process files and
 generate documents, using Lua as a common, simple and powerful scripting
 language.
 
@@ -386,6 +386,22 @@ set xrange [-pi:pi]
 set yrange [-1.5:1.5]
 plot sin(x) lw 4, cos(x) lw 4
 ```
+
+# Stack
+
+Stack is a program for developing Haskell projects. It is aimed at Haskellers
+both new and experienced. It is cross-platform and aims to support fully users
+on Linux, macOS and Windows.
+
+Stack features:
+
+- Installing the [Glasgow Haskell Compiler (GHC)](https://www.haskell.org/ghc/) automatically, in an isolated location.
+- Installing packages needed for your project.
+- Building your project.
+- Testing your project.
+- Benchmarking your project.
+
+The documentation of Stack is here: <https://docs.haskellstack.org/en/stable/>
 
 # References
 

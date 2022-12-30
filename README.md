@@ -1,8 +1,8 @@
 # LuaX and pandoc based tools
 
 `makex.mk` is a Makefile. It is intended to be included in any Makefile
-to easily install some tools based on LuaX and Pandoc to preproces files
-and generate documents, using Lua as a common, simple and powerful
+to easily install some tools based on LuaX and Pandoc to pre-process
+files and generate documents, using Lua as a common, simple and powerful
 scripting language.
 
 # Introduction
@@ -92,6 +92,11 @@ For a complete documentation, please refer to `makex`:
 # BEAMER
 #     shortcut to panda with some default parameters
 #     to generate beamer slideshows
+# STACK
+#     path to the stack executable
+#     (see https://docs.haskellstack.org/en/stable/)
+# STACK_CMD
+#     stack command that sets stack-root and resolver
 #
 # It also adds some targets:
 #
@@ -129,6 +134,12 @@ PANDOC_LATEX_TEMPLATE_VERSION = master
 
 # PANDA_VERSION is a tag or branch name in the Panda repository
 PANDA_VERSION ?= master
+
+# STACK_LTS is the Haskell stack LTS version
+STACK_LTS ?= lts-20.5
+
+# STACK_VERSION is the version of stack
+STACK_VERSION ?= 2.9.1
 ```
 
 # Example
@@ -530,6 +541,25 @@ code blocks and are replaced by an image by panda.
     ```
 
 <img src="example/img/graph.svg" style="width:67.0%" />
+
+# Stack
+
+Stack is a program for developing Haskell projects. It is aimed at
+Haskellers both new and experienced. It is cross-platform and aims to
+support fully users on Linux, macOS and Windows.
+
+Stack features:
+
+- Installing the [Glasgow Haskell Compiler
+  (GHC)](https://www.haskell.org/ghc/) automatically, in an isolated
+  location.
+- Installing packages needed for your project.
+- Building your project.
+- Testing your project.
+- Benchmarking your project.
+
+The documentation of Stack is here:
+<https://docs.haskellstack.org/en/stable/>
 
 # References
 

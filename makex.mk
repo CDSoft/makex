@@ -51,6 +51,11 @@
 # BEAMER
 #     shortcut to panda with some default parameters
 #     to generate beamer slideshows
+# STACK
+#     path to the stack executable
+#     (see https://docs.haskellstack.org/en/stable/)
+# STACK_CMD
+#     stack command that sets stack-root and resolver
 #
 # It also adds some targets:
 #
@@ -88,6 +93,12 @@ PANDOC_LATEX_TEMPLATE_VERSION = master
 
 # PANDA_VERSION is a tag or branch name in the Panda repository
 PANDA_VERSION ?= master
+
+# STACK_LTS is the Haskell stack LTS version
+STACK_LTS ?= lts-20.5
+
+# STACK_VERSION is the version of stack
+STACK_VERSION ?= 2.9.1
 
 #}}}
 
@@ -275,6 +286,34 @@ $(PANDA): | $(PANDOC) $(MAKEX_CACHE) $(dir $(PANDA))
 		&& make install-all PREFIX=$(realpath $(dir $@)) \
 		&& sed -i 's#^pandoc #$(PANDOC) #' $@ \
 	)
+
+###########################################################################
+# Haskell Stack
+###########################################################################
+
+ifeq ($(OS)-$(ARCH),Linux-x86_64)
+STACK_ARCHIVE = stack-$(STACK_VERSION)-linux-x86_64.tar.gz
+endif
+
+ifeq ($(STACK_ARCHIVE),)
+$(error $(OS)-$(ARCH): Unknown archivecture, can not install stack)
+endif
+
+STACK_URL = https://github.com/commercialhaskell/stack/releases/download/v$(STACK_VERSION)/$(STACK_ARCHIVE)
+STACK = $(MAKEX_INSTALL_PATH)/stack/$(STACK_VERSION)/stack
+
+$(dir $(STACK)) $(MAKEX_CACHE)/stack:
+	@mkdir -p $@
+
+$(STACK): | $(MAKEX_CACHE)/stack $(dir $(STACK))
+	@test -f $@ \
+	|| \
+	(	wget $(STACK_URL) -O $(MAKEX_CACHE)/stack/$(notdir $(STACK_URL)) \
+		&& tar -C $(MAKEX_CACHE)/stack -xzf $(MAKEX_CACHE)/stack/$(notdir $(STACK_URL)) \
+		&& cp $(MAKEX_CACHE)/stack/stack-$(STACK_VERSION)-linux-x86_64/stack $@ \
+	)
+
+STACK_CMD = $(STACK) --stack-root=$(dir $(STACK))/.stack --resolver=$(STACK_LTS)
 
 ###########################################################################
 # Panda shortcuts
