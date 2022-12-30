@@ -1,9 +1,11 @@
 ---
-title: makex
+title: makex - LuaX and pandoc based tools
 date: @(DATE)
 author: @(AUTHOR)
 keywords: [Lua, LuaX, Pandoc, Panda, UPP, Make]
 book: true
+titlepage: true
+toc-own-page: true
 ---
 
 # LuaX and pandoc based tools
@@ -68,7 +70,7 @@ The full repository is available on Github: <https://github.com/CDSoft/makex>.
 
 For a complete documentation, please refer to `makex`:
 
-```{.makefile include=makex.mk pattern="#{{{%s*(.-)%s*#}}}" format="%1"}
+```{.makefile include="../makex.mk" pattern="#{{{%s*(.-)%s*#}}}" format="%1"}
 ```
 
 # Example

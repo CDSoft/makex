@@ -31,12 +31,12 @@ PDF_OPTS += --table-of-content
 PDF_OPTS += --highlight-style tango
 
 ## Generates README.md and examples
-all: README.md
+all: ../README.md
 all: $(BUILD)/makex.html
 all: $(BUILD)/makex.pdf
 
 # first include makex.mk to add makex targets ($(LUAX), $(UPP), ...)
-include makex.mk
+include ../makex.mk
 
 # Note that comments starting with `##` are used by the `help` target
 # to document targets (try `make help`)
@@ -55,7 +55,7 @@ mrproper: clean makex_clean
 welcome:
 	@echo '${CYAN}makex${NORMAL} usage example'
 
-# Preproces a Markdown file with $(UPP).
+# Preprocess a Markdown file with $(UPP).
 # The preprocessed file is also a Markdown file
 # that can be used by $(PANDA).
 $(BUILD)/%.md: %.md makex.lua | $(UPP) $(DEPENDENCIES)
@@ -76,10 +76,10 @@ $(BUILD)/%.pdf: $(BUILD)/%.md | $(PANDA) $(PANDOC_LATEX_TEMPLATE) img $(DEPENDEN
 	$(PANDA_PDF) $(PDF_OPTS) $< -o $@
 
 # Render a Github Markdown file using $(PANDA)
-README.md: $(BUILD)/makex.md | $(PANDA) img $(DEPENDENCIES)
+../README.md: $(BUILD)/makex.md fix_links.lua | $(PANDA) img $(DEPENDENCIES)
 	PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
-	$(PANDA_GFM) $< -o $@
+	$(PANDA_GFM) -L fix_links.lua $< -o $@
 
 img $(DEPENDENCIES):
 	mkdir -p $@
