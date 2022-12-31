@@ -37,6 +37,8 @@ all: $(BUILD)/makex.pdf
 
 # first include makex.mk to add makex targets ($(LUAX), $(UPP), ...)
 include ../makex.mk
+UPP_COLOR = ${BLACK}${BG_GREEN}
+PANDA_COLOR = ${BLACK}${BG_GREEN}
 
 # Note that comments starting with `##` are used by the `help` target
 # to document targets (try `make help`)
@@ -46,42 +48,46 @@ clean:
 	rm -rf $(BUILD)
 
 ## Clean the build directory and all makex tools
-mrproper: clean makex_clean
+mrproper: clean makex-clean
 
 .SECONDARY:
 
 # This is the welcome message used by the `help` target.
 # Note the single `#`, this is not a documentation for `help`.
 welcome:
-	@echo '${CYAN}makex${NORMAL} usage example'
+	@echo '${TEXT_COLOR}makex${NORMAL} usage example'
 
 # Preprocess a Markdown file with $(UPP).
 # The preprocessed file is also a Markdown file
 # that can be used by $(PANDA).
 $(BUILD)/%.md: %.md makex.lua | $(UPP) $(DEPENDENCIES)
+	@echo '${UPP_COLOR}[UPP]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@mkdir -p $(dir $@)
-	$(UPP) -MT $@ -MF $(DEPENDENCIES)/$(notdir $@).upp.d \
+	@$(UPP) -MT $@ -MF $(DEPENDENCIES)/$(notdir $@).upp.d \
 		-p . -l makex.lua $< -o $@
 
 # Render an HTML file using $(PANDA) (i.e. pandoc and some Lua filters)
 $(BUILD)/%.html: $(BUILD)/%.md | $(PANDA) $(PANAM_CSS) img $(DEPENDENCIES)
-	PANDA_TARGET=$@ \
+	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
+	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	$(PANDA_HTML) $(HTML_OPTS) $< -o $@
 
 # Render a PDF file using $(PANDA) (i.e. pandoc and some Lua filters)
 $(BUILD)/%.pdf: $(BUILD)/%.md | $(PANDA) $(PANDOC_LATEX_TEMPLATE) img $(DEPENDENCIES)
-	PANDA_TARGET=$@ \
+	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
+	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	$(PANDA_PDF) $(PDF_OPTS) $< -o $@
 
 # Render a Github Markdown file using $(PANDA)
 ../README.md: $(BUILD)/makex.md fix_links.lua | $(PANDA) img $(DEPENDENCIES)
-	PANDA_TARGET=$@ \
+	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
+	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	$(PANDA_GFM) -L fix_links.lua $< -o $@
 
 img $(DEPENDENCIES):
-	mkdir -p $@
+	@mkdir -p $@
 
 -include $(wildcard $(DEPENDENCIES)/*.d)

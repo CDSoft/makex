@@ -59,13 +59,25 @@
 #
 # It also adds some targets:
 #
-# makex_clean
+# makex-clean
 #     remove all makex tools
+# makex-install
+#     install all makex tools
+# makex-install-luax
+#     install luax
+# makex-install-upp
+#     install upp
+# makex-install-pandoc
+#     install pandoc
+# makex-install-panda
+#     install panda
+# makex-install-stack
+#     install stack
 # help
 #     runs the `welcome` target (user defined)
 #     and lists the targets with their documentation
 
-# The project configuration vatriables can be defined before including
+# The project configuration variables can be defined before including
 # makex.mk.
 
 # MAKEX_INSTALL_PATH defines the path where tools are installed
@@ -108,16 +120,28 @@ STACK_VERSION ?= 2.9.1
 
 .PHONY: help welcome
 
-RED    := $(shell tput -Txterm setaf 1)
-GREEN  := $(shell tput -Txterm setaf 2)
-YELLOW := $(shell tput -Txterm setaf 3)
-BLUE   := $(shell tput -Txterm setaf 4)
-CYAN   := $(shell tput -Txterm setaf 6)
-NORMAL := $(shell tput -Txterm sgr0)
+BLACK     := $(shell tput -Txterm setaf 0)
+RED       := $(shell tput -Txterm setaf 1)
+GREEN     := $(shell tput -Txterm setaf 2)
+YELLOW    := $(shell tput -Txterm setaf 3)
+BLUE      := $(shell tput -Txterm setaf 4)
+PURPLE    := $(shell tput -Txterm setaf 5)
+CYAN      := $(shell tput -Txterm setaf 6)
+WHITE     := $(shell tput -Txterm setaf 7)
+BG_BLACK  := $(shell tput -Txterm setab 0)
+BG_RED    := $(shell tput -Txterm setab 1)
+BG_GREEN  := $(shell tput -Txterm setab 2)
+BG_YELLOW := $(shell tput -Txterm setab 3)
+BG_BLUE   := $(shell tput -Txterm setab 4)
+BG_PURPLE := $(shell tput -Txterm setab 5)
+BG_CYAN   := $(shell tput -Txterm setab 6)
+BG_WHITE  := $(shell tput -Txterm setab 7)
+NORMAL    := $(shell tput -Txterm sgr0)
 
 CMD_COLOR    := ${YELLOW}
 TARGET_COLOR := ${GREEN}
-TEXT_COLOR   := ${YELLOW}
+TEXT_COLOR   := ${CYAN}
+MAKEX_COLOR  := ${BLACK}${BG_CYAN}
 
 ## show this help massage
 help: welcome
@@ -136,11 +160,14 @@ help: welcome
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
+.SECONDARY:
+
 ###########################################################################
-# Cleaning makex direcotries
+# Cleaning makex directories
 ###########################################################################
 
-makex_clean:
+makex-clean:
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)clean$(NORMAL)"
 	rm -rf $(MAKEX_INSTALL_PATH) $(MAKEX_CACHE)
 
 ###########################################################################
@@ -154,8 +181,8 @@ $(MAKEX_CACHE) $(MAKEX_INSTALL_PATH):
 # Host detection
 ###########################################################################
 
-ARCH := $(shell uname -m)
-OS := $(shell uname -s)
+MAKEX_ARCH := $(shell uname -m)
+MAKEX_OS := $(shell uname -s)
 
 ###########################################################################
 # LuaX
@@ -168,6 +195,7 @@ $(dir $(LUAX)):
 	@mkdir -p $@
 
 $(LUAX): | $(MAKEX_CACHE) $(dir $(LUAX))
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install LuaX$(NORMAL)"
 	@test -f $(@) \
 	|| \
 	(	(	test -d $(MAKEX_CACHE)/luax \
@@ -178,6 +206,9 @@ $(LUAX): | $(MAKEX_CACHE) $(dir $(LUAX))
 		&& git checkout $(LUAX_VERSION) \
 		&& make install-all PREFIX=$(realpath $(dir $@)) \
 	)
+
+makex-install: makex-install-luax
+makex-install-luax: $(LUAX)
 
 ###########################################################################
 # UPP
@@ -190,6 +221,7 @@ $(dir $(UPP)):
 	@mkdir -p $@
 
 $(UPP): | $(LUAX) $(MAKEX_CACHE) $(dir $(UPP))
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install UPP$(NORMAL)"
 	@test -f $(@) \
 	|| \
 	(	(	test -d $(MAKEX_CACHE)/upp \
@@ -201,31 +233,8 @@ $(UPP): | $(LUAX) $(MAKEX_CACHE) $(dir $(UPP))
 		&& make install PREFIX=$(realpath $(dir $@)) \
 	)
 
-###########################################################################
-# Pandoc
-###########################################################################
-
-ifeq ($(OS)-$(ARCH),Linux-x86_64)
-PANDOC_ARCHIVE = pandoc-$(PANDOC_VERSION)-linux-amd64.tar.gz
-endif
-
-ifeq ($(PANDOC_ARCHIVE),)
-$(error $(OS)-$(ARCH): Unknown archivecture, can not install pandoc)
-endif
-
-PANDOC_URL = https://github.com/jgm/pandoc/releases/download/$(PANDOC_VERSION)/$(PANDOC_ARCHIVE)
-PANDOC = $(MAKEX_INSTALL_PATH)/pandoc/$(PANDOC_VERSION)/pandoc
-
-$(dir $(PANDOC)) $(MAKEX_CACHE)/pandoc:
-	@mkdir -p $@
-
-$(PANDOC): | $(MAKEX_CACHE) $(MAKEX_CACHE)/pandoc $(dir $(PANDOC))
-	@test -f $(@) \
-	|| \
-	( 	wget -c $(PANDOC_URL) -O $(MAKEX_CACHE)/pandoc/$(notdir $(PANDOC_URL)) \
-		&& tar -C $(MAKEX_CACHE)/pandoc -xzf $(MAKEX_CACHE)/pandoc/$(notdir $(PANDOC_URL)) \
-		&& cp -P $(MAKEX_CACHE)/pandoc/pandoc-$(PANDOC_VERSION)/bin/* $(dir $@) \
-	)
+makex-install: makex-install-upp
+makex-install-upp: $(UPP)
 
 ###########################################################################
 # Pandoc LaTeX template
@@ -237,7 +246,8 @@ PANDOC_LATEX_TEMPLATE = $(MAKEX_INSTALL_PATH)/pandoc/pandoc-latex-template/eisvo
 $(dir $(PANDOC_LATEX_TEMPLATE)):
 	@mkdir -p $@
 
-$(PANDOC_LATEX_TEMPLATE): | $(PANDOC) $(MAKEX_CACHE) $(dir $(PANDOC_LATEX_TEMPLATE))
+$(PANDOC_LATEX_TEMPLATE): | $(MAKEX_CACHE) $(dir $(PANDOC_LATEX_TEMPLATE))
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Pandoc LaTeX Template$(NORMAL)"
 	@test -f $(@) \
 	|| \
 	(	(	test -d $(MAKEX_CACHE)/pandoc-latex-template \
@@ -259,10 +269,41 @@ PANAM_CSS = $(MAKEX_INSTALL_PATH)/pandoc/panam/styling.css
 $(dir $(PANAM_CSS)):
 	@mkdir -p $@
 
-$(PANAM_CSS): | $(PANDOC) $(MAKEX_CACHE) $(dir $(PANAM_CSS))
+$(PANAM_CSS): | $(MAKEX_CACHE) $(dir $(PANAM_CSS))
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Pandoc Pan Am CSS$(NORMAL)"
 	@test -f $(@) \
 	|| \
 	wget -c $(PANAM_URL) -O $@
+
+###########################################################################
+# Pandoc
+###########################################################################
+
+ifeq ($(MAKEX_OS)-$(MAKEX_ARCH),Linux-x86_64)
+PANDOC_ARCHIVE = pandoc-$(PANDOC_VERSION)-linux-amd64.tar.gz
+endif
+
+ifeq ($(PANDOC_ARCHIVE),)
+$(error $(MAKEX_OS)-$(MAKEX_ARCH): Unknown archivecture, can not install pandoc)
+endif
+
+PANDOC_URL = https://github.com/jgm/pandoc/releases/download/$(PANDOC_VERSION)/$(PANDOC_ARCHIVE)
+PANDOC = $(MAKEX_INSTALL_PATH)/pandoc/$(PANDOC_VERSION)/pandoc
+
+$(dir $(PANDOC)) $(MAKEX_CACHE)/pandoc:
+	@mkdir -p $@
+
+$(PANDOC): | $(MAKEX_CACHE) $(MAKEX_CACHE)/pandoc $(dir $(PANDOC)) $(PANDOC_LATEX_TEMPLATE) $(PANAM_CSS)
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Pandoc$(NORMAL)"
+	@test -f $(@) \
+	|| \
+	( 	wget -c $(PANDOC_URL) -O $(MAKEX_CACHE)/pandoc/$(notdir $(PANDOC_URL)) \
+		&& tar -C $(MAKEX_CACHE)/pandoc -xzf $(MAKEX_CACHE)/pandoc/$(notdir $(PANDOC_URL)) \
+		&& cp -P $(MAKEX_CACHE)/pandoc/pandoc-$(PANDOC_VERSION)/bin/* $(dir $@) \
+	)
+
+makex-install: makex-install-pandoc
+makex-install-pandoc: $(PANDOC)
 
 ###########################################################################
 # Panda
@@ -275,6 +316,7 @@ $(dir $(PANDA)):
 	@mkdir -p $@
 
 $(PANDA): | $(PANDOC) $(MAKEX_CACHE) $(dir $(PANDA))
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Panda$(NORMAL)"
 	@test -f $(@) \
 	|| \
 	(	(	test -d $(MAKEX_CACHE)/panda \
@@ -287,16 +329,19 @@ $(PANDA): | $(PANDOC) $(MAKEX_CACHE) $(dir $(PANDA))
 		&& sed -i 's#^pandoc #$(PANDOC) #' $@ \
 	)
 
+makex-install: makex-install-panda
+makex-install-panda: $(PANDA)
+
 ###########################################################################
 # Haskell Stack
 ###########################################################################
 
-ifeq ($(OS)-$(ARCH),Linux-x86_64)
+ifeq ($(MAKEX_OS)-$(MAKEX_ARCH),Linux-x86_64)
 STACK_ARCHIVE = stack-$(STACK_VERSION)-linux-x86_64.tar.gz
 endif
 
 ifeq ($(STACK_ARCHIVE),)
-$(error $(OS)-$(ARCH): Unknown archivecture, can not install stack)
+$(error $(MAKEX_OS)-$(MAKEX_ARCH): Unknown archivecture, can not install stack)
 endif
 
 STACK_URL = https://github.com/commercialhaskell/stack/releases/download/v$(STACK_VERSION)/$(STACK_ARCHIVE)
@@ -306,6 +351,7 @@ $(dir $(STACK)) $(MAKEX_CACHE)/stack:
 	@mkdir -p $@
 
 $(STACK): | $(MAKEX_CACHE)/stack $(dir $(STACK))
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Haskell Stack$(NORMAL)"
 	@test -f $@ \
 	|| \
 	(	wget $(STACK_URL) -O $(MAKEX_CACHE)/stack/$(notdir $(STACK_URL)) \
@@ -314,6 +360,9 @@ $(STACK): | $(MAKEX_CACHE)/stack $(dir $(STACK))
 	)
 
 STACK_CMD = $(STACK) --stack-root=$(dir $(STACK))/.stack --resolver=$(STACK_LTS)
+
+makex-install: makex-install-stack
+makex-install-stack: $(STACK)
 
 ###########################################################################
 # Panda shortcuts
@@ -326,18 +375,16 @@ PANDA_GFM = $(PANDA)
 PANDA_GFM += --to gfm
 
 PANDA_HTML = $(PANDA)
-PANDA_HTML += --embed-resources --standalone
 PANDA_HTML += --to html5
 PANDA_HTML += --css $(PANAM_CSS)
+PANDA_HTML += --embed-resources --standalone
 
 PANDA_PDF = $(PANDA)
-PANDA_PDF += --embed-resources --standalone
 PANDA_PDF += --to latex
 PANDA_PDF += --template=$(PANDOC_LATEX_TEMPLATE)
+PANDA_PDF += --embed-resources --standalone
 
 BEAMER = $(PANDA)
-BEAMER += --embed-resources --standalone
 BEAMER += --to beamer
 BEAMER += -V theme:Madrid -V colortheme:default
-BEAMER += --slide-level=1
-BEAMER += --highlight-style tango
+BEAMER += --embed-resources --standalone
