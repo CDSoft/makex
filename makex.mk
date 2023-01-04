@@ -51,6 +51,9 @@
 # BEAMER
 #     shortcut to panda with some default parameters
 #     to generate beamer slideshows
+# LETTER
+#     shortcut to panda with some default parameters
+#     to generate a letter
 # STACK
 #     path to the stack executable
 #     (see https://docs.haskellstack.org/en/stable/)
@@ -79,6 +82,9 @@
 
 # The project configuration variables can be defined before including
 # makex.mk.
+#
+# Makex update:
+# wget http://cdelord.fr/makex/makex.mk
 
 # MAKEX_INSTALL_PATH defines the path where tools are installed
 MAKEX_INSTALL_PATH ?= /var/tmp/makex
@@ -102,6 +108,10 @@ PANDOC_VERSION ?= 2.19.2
 # PANDOC_LATEX_TEMPLATE_VERSION is a tag or branch name in the
 # pandoc-latex-template repository
 PANDOC_LATEX_TEMPLATE_VERSION = master
+
+# PANDOC_LETTER_VERSION is a tag or branch name in the
+# pandoc-letter repository
+PANDOC_LETTER_VERSION = master
 
 # PANDA_VERSION is a tag or branch name in the Panda repository
 PANDA_VERSION ?= master
@@ -260,6 +270,29 @@ $(PANDOC_LATEX_TEMPLATE): | $(MAKEX_CACHE) $(dir $(PANDOC_LATEX_TEMPLATE))
 	)
 
 ###########################################################################
+# Pandoc Letter
+###########################################################################
+
+PANDOC_LETTER_URL = https://github.com/aaronwolen/pandoc-letter.git
+PANDOC_LETTER = $(MAKEX_INSTALL_PATH)/pandoc/pandoc-letter/template-letter.tex
+
+$(dir $(PANDOC_LETTER)):
+	@mkdir -p $@
+
+$(PANDOC_LETTER): | $(MAKEX_CACHE) $(dir $(PANDOC_LETTER))
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Pandoc Letter$(NORMAL)"
+	@test -f $(@) \
+	|| \
+	(	(	test -d $(MAKEX_CACHE)/pandoc-letter \
+			&& ( cd $(MAKEX_CACHE)/pandoc-letter && git pull ) \
+			|| git clone $(PANDOC_LETTER_URL) $(MAKEX_CACHE)/pandoc-letter \
+		) \
+		&& cd $(MAKEX_CACHE)/pandoc-letter \
+		&& git checkout $(PANDOC_LETTER_VERSION) \
+		&& cp $(MAKEX_CACHE)/pandoc-letter/template-letter.tex $@ \
+	)
+
+###########################################################################
 # Pandoc Panam CSS
 ###########################################################################
 
@@ -293,7 +326,7 @@ PANDOC = $(MAKEX_INSTALL_PATH)/pandoc/$(PANDOC_VERSION)/pandoc
 $(dir $(PANDOC)) $(MAKEX_CACHE)/pandoc:
 	@mkdir -p $@
 
-$(PANDOC): | $(MAKEX_CACHE) $(MAKEX_CACHE)/pandoc $(dir $(PANDOC)) $(PANDOC_LATEX_TEMPLATE) $(PANAM_CSS)
+$(PANDOC): | $(MAKEX_CACHE) $(MAKEX_CACHE)/pandoc $(dir $(PANDOC)) $(PANDOC_LATEX_TEMPLATE) $(PANDOC_LETTER) $(PANAM_CSS)
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Pandoc$(NORMAL)"
 	@test -f $(@) \
 	|| \
@@ -382,9 +415,12 @@ PANDA_HTML += --embed-resources --standalone
 PANDA_PDF = $(PANDA)
 PANDA_PDF += --to latex
 PANDA_PDF += --template=$(PANDOC_LATEX_TEMPLATE)
-PANDA_PDF += --embed-resources --standalone
 
 BEAMER = $(PANDA)
 BEAMER += --to beamer
 BEAMER += -V theme:Madrid -V colortheme:default
-BEAMER += --embed-resources --standalone
+
+LETTER = $(PANDA)
+LETTER += --to latex
+LETTER += --template=$(PANDOC_LETTER)
+LETTRE += -V lang:en

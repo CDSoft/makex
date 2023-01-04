@@ -92,6 +92,9 @@ For a complete documentation, please refer to `makex`:
 # BEAMER
 #     shortcut to panda with some default parameters
 #     to generate beamer slideshows
+# LETTER
+#     shortcut to panda with some default parameters
+#     to generate a letter
 # STACK
 #     path to the stack executable
 #     (see https://docs.haskellstack.org/en/stable/)
@@ -120,6 +123,9 @@ For a complete documentation, please refer to `makex`:
 
 # The project configuration variables can be defined before including
 # makex.mk.
+#
+# Makex update:
+# wget http://cdelord.fr/makex/makex.mk
 
 # MAKEX_INSTALL_PATH defines the path where tools are installed
 MAKEX_INSTALL_PATH ?= /var/tmp/makex
@@ -143,6 +149,10 @@ PANDOC_VERSION ?= 2.19.2
 # PANDOC_LATEX_TEMPLATE_VERSION is a tag or branch name in the
 # pandoc-latex-template repository
 PANDOC_LATEX_TEMPLATE_VERSION = master
+
+# PANDOC_LETTER_VERSION is a tag or branch name in the
+# pandoc-letter repository
+PANDOC_LETTER_VERSION = master
 
 # PANDA_VERSION is a tag or branch name in the Panda repository
 PANDA_VERSION ?= master
@@ -173,6 +183,7 @@ PDF_OPTS += --highlight-style tango
 all: ../README.md
 all: $(BUILD)/makex.html
 all: $(BUILD)/makex.pdf
+all: $(BUILD)/letter.pdf
 
 # first include makex.mk to add makex targets ($(LUAX), $(UPP), ...)
 include ../makex.mk
@@ -206,18 +217,33 @@ $(BUILD)/%.md: %.md makex.lua | $(UPP) $(DEPENDENCIES)
 		-p . -l makex.lua $< -o $@
 
 # Render an HTML file using $(PANDA) (i.e. pandoc and some Lua filters)
-$(BUILD)/%.html: $(BUILD)/%.md | $(PANDA) $(PANAM_CSS) img $(DEPENDENCIES)
+$(BUILD)/%.html: $(BUILD)/%.md | $(PANDA) img $(DEPENDENCIES)
 	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	$(PANDA_HTML) $(HTML_OPTS) $< -o $@
 
 # Render a PDF file using $(PANDA) (i.e. pandoc and some Lua filters)
-$(BUILD)/%.pdf: $(BUILD)/%.md | $(PANDA) $(PANDOC_LATEX_TEMPLATE) img $(DEPENDENCIES)
+$(BUILD)/%.pdf: $(BUILD)/%.md | $(PANDA) img $(DEPENDENCIES)
 	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	$(PANDA_PDF) $(PDF_OPTS) $< -o $@
+
+# Render an english letter using $(PANDA) (i.e. pandoc and some Lua filters)
+$(BUILD)/letter.pdf: $(BUILD)/letter.md | $(PANDA) img $(DEPENDENCIES)
+	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
+	@PANDA_TARGET=$@ \
+	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
+	LANG=en \
+	$(LETTER) $< -o $@
+
+$(BUILD)/letter.md: $(MAKEX_CACHE)/pandoc-letter/example/letter.md | $(PANDA)
+	@echo '${PANDA_COLOR}[CP]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
+	@cp $< $@
+	@sed -i 's#example/#$(dir $<)#' $@
+
+$(MAKEX_CACHE)/pandoc-letter/example/letter.md: $(PANDOC_LETTER)
 
 # Render a Github Markdown file using $(PANDA)
 ../README.md: $(BUILD)/makex.md fix_links.lua | $(PANDA) img $(DEPENDENCIES)

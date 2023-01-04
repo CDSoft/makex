@@ -34,6 +34,7 @@ PDF_OPTS += --highlight-style tango
 all: ../README.md
 all: $(BUILD)/makex.html
 all: $(BUILD)/makex.pdf
+all: $(BUILD)/letter.pdf
 
 # first include makex.mk to add makex targets ($(LUAX), $(UPP), ...)
 include ../makex.mk
@@ -67,18 +68,33 @@ $(BUILD)/%.md: %.md makex.lua | $(UPP) $(DEPENDENCIES)
 		-p . -l makex.lua $< -o $@
 
 # Render an HTML file using $(PANDA) (i.e. pandoc and some Lua filters)
-$(BUILD)/%.html: $(BUILD)/%.md | $(PANDA) $(PANAM_CSS) img $(DEPENDENCIES)
+$(BUILD)/%.html: $(BUILD)/%.md | $(PANDA) img $(DEPENDENCIES)
 	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	$(PANDA_HTML) $(HTML_OPTS) $< -o $@
 
 # Render a PDF file using $(PANDA) (i.e. pandoc and some Lua filters)
-$(BUILD)/%.pdf: $(BUILD)/%.md | $(PANDA) $(PANDOC_LATEX_TEMPLATE) img $(DEPENDENCIES)
+$(BUILD)/%.pdf: $(BUILD)/%.md | $(PANDA) img $(DEPENDENCIES)
 	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	$(PANDA_PDF) $(PDF_OPTS) $< -o $@
+
+# Render an english letter using $(PANDA) (i.e. pandoc and some Lua filters)
+$(BUILD)/letter.pdf: $(BUILD)/letter.md | $(PANDA) img $(DEPENDENCIES)
+	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
+	@PANDA_TARGET=$@ \
+	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
+	LANG=en \
+	$(LETTER) $< -o $@
+
+$(BUILD)/letter.md: $(MAKEX_CACHE)/pandoc-letter/example/letter.md | $(PANDA)
+	@echo '${PANDA_COLOR}[CP]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
+	@cp $< $@
+	@sed -i 's#example/#$(dir $<)#' $@
+
+$(MAKEX_CACHE)/pandoc-letter/example/letter.md: $(PANDOC_LETTER)
 
 # Render a Github Markdown file using $(PANDA)
 ../README.md: $(BUILD)/makex.md fix_links.lua | $(PANDA) img $(DEPENDENCIES)
