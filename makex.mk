@@ -240,7 +240,7 @@ $(UPP): | $(LUAX) $(MAKEX_CACHE) $(dir $(UPP))
 		) \
 		&& cd $(MAKEX_CACHE)/upp \
 		&& git checkout $(UPP_VERSION) \
-		&& make install PREFIX=$(realpath $(dir $@)) \
+		&& make install LUAX=$(LUAX) PREFIX=$(realpath $(dir $@)) \
 	)
 
 makex-install: makex-install-upp
