@@ -201,6 +201,8 @@ MAKEX_OS := $(shell uname -s)
 LUAX_URL = https://github.com/CDSoft/luax
 LUAX = $(MAKEX_INSTALL_PATH)/luax/$(LUAX_VERSION)/luax
 
+export PATH := $(dir $(LUAX)):$(PATH)
+
 $(dir $(LUAX)):
 	@mkdir -p $@
 
@@ -226,6 +228,8 @@ makex-install-luax: $(LUAX)
 
 UPP_URL = https://github.com/CDSoft/upp
 UPP = $(MAKEX_INSTALL_PATH)/upp/$(UPP_VERSION)/upp
+
+export PATH := $(dir $(UPP)):$(PATH)
 
 $(dir $(UPP)):
 	@mkdir -p $@
@@ -323,6 +327,8 @@ endif
 PANDOC_URL = https://github.com/jgm/pandoc/releases/download/$(PANDOC_VERSION)/$(PANDOC_ARCHIVE)
 PANDOC = $(MAKEX_INSTALL_PATH)/pandoc/$(PANDOC_VERSION)/pandoc
 
+export PATH := $(dir $(PANDOC)):$(PATH)
+
 $(dir $(PANDOC)) $(MAKEX_CACHE)/pandoc:
 	@mkdir -p $@
 
@@ -344,6 +350,8 @@ makex-install-pandoc: $(PANDOC)
 
 PANDA_URL = https://github.com/CDSoft/panda
 PANDA = $(MAKEX_INSTALL_PATH)/pandoc/$(PANDOC_VERSION)/panda/$(PANDA_VERSION)/panda
+
+export PATH := $(dir $(PANDA)):$(PATH)
 
 $(dir $(PANDA)):
 	@mkdir -p $@
@@ -379,6 +387,8 @@ endif
 
 STACK_URL = https://github.com/commercialhaskell/stack/releases/download/v$(STACK_VERSION)/$(STACK_ARCHIVE)
 STACK = $(MAKEX_INSTALL_PATH)/stack/$(STACK_VERSION)/stack
+
+export PATH := $(dir $(STACK)):$(PATH)
 
 $(dir $(STACK)) $(MAKEX_CACHE)/stack:
 	@mkdir -p $@
