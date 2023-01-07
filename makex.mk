@@ -353,6 +353,8 @@ PANDA = $(MAKEX_INSTALL_PATH)/pandoc/$(PANDOC_VERSION)/panda/$(PANDA_VERSION)/pa
 
 export PATH := $(dir $(PANDA)):$(PATH)
 
+export PANDA_CACHE ?= $(MAKEX_CACHE)/.panda
+
 $(dir $(PANDA)):
 	@mkdir -p $@
 
