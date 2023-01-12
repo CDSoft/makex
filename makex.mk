@@ -161,12 +161,12 @@ help: welcome
 	@echo ''
 	@echo 'Targets:'
 	@awk '/^[a-zA-Z\-_0-9]+:/ { \
-		helpMessage = match(lastLine, /^## (.*)/); \
-		if (helpMessage) { \
-			helpCommand = substr($$1, 0, index($$1, ":")-1); \
-			helpMessage = substr(lastLine, RSTART + 3, RLENGTH); \
-			printf "  ${TARGET_COLOR}%-$(MAKEX_HELP_TARGET_MAX_LEN)s${NORMAL} ${TEXT_COLOR}%s${NORMAL}\n", helpCommand, helpMessage; \
-		} \
+	    helpMessage = match(lastLine, /^## (.*)/); \
+	    if (helpMessage) { \
+	        helpCommand = substr($$1, 0, index($$1, ":")-1); \
+	        helpMessage = substr(lastLine, RSTART + 3, RLENGTH); \
+	        printf "  ${TARGET_COLOR}%-$(MAKEX_HELP_TARGET_MAX_LEN)s${NORMAL} ${TEXT_COLOR}%s${NORMAL}\n", helpCommand, helpMessage; \
+	    } \
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
@@ -210,13 +210,13 @@ $(LUAX): | $(MAKEX_CACHE) $(dir $(LUAX))
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install LuaX$(NORMAL)"
 	@test -f $(@) \
 	|| \
-	(	(	test -d $(MAKEX_CACHE)/luax \
-			&& ( cd $(MAKEX_CACHE)/luax && git pull ) \
-			|| git clone $(LUAX_URL) $(MAKEX_CACHE)/luax \
-		) \
-		&& cd $(MAKEX_CACHE)/luax \
-		&& git checkout $(LUAX_VERSION) \
-		&& make install-all PREFIX=$(realpath $(dir $@)) \
+	(   (   test -d $(MAKEX_CACHE)/luax \
+	        && ( cd $(MAKEX_CACHE)/luax && git pull ) \
+	        || git clone $(LUAX_URL) $(MAKEX_CACHE)/luax \
+	    ) \
+	    && cd $(MAKEX_CACHE)/luax \
+	    && git checkout $(LUAX_VERSION) \
+	    && make install-all PREFIX=$(realpath $(dir $@)) \
 	)
 
 makex-install: makex-install-luax
@@ -238,13 +238,13 @@ $(UPP): | $(LUAX) $(MAKEX_CACHE) $(dir $(UPP))
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install UPP$(NORMAL)"
 	@test -f $(@) \
 	|| \
-	(	(	test -d $(MAKEX_CACHE)/upp \
-			&& ( cd $(MAKEX_CACHE)/upp && git pull ) \
-			|| git clone $(UPP_URL) $(MAKEX_CACHE)/upp \
-		) \
-		&& cd $(MAKEX_CACHE)/upp \
-		&& git checkout $(UPP_VERSION) \
-		&& make install LUAX=$(LUAX) PREFIX=$(realpath $(dir $@)) \
+	(   (   test -d $(MAKEX_CACHE)/upp \
+	        && ( cd $(MAKEX_CACHE)/upp && git pull ) \
+	        || git clone $(UPP_URL) $(MAKEX_CACHE)/upp \
+	    ) \
+	    && cd $(MAKEX_CACHE)/upp \
+	    && git checkout $(UPP_VERSION) \
+	    && make install LUAX=$(LUAX) PREFIX=$(realpath $(dir $@)) \
 	)
 
 makex-install: makex-install-upp
@@ -264,13 +264,13 @@ $(PANDOC_LATEX_TEMPLATE): | $(MAKEX_CACHE) $(dir $(PANDOC_LATEX_TEMPLATE))
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Pandoc LaTeX Template$(NORMAL)"
 	@test -f $(@) \
 	|| \
-	(	(	test -d $(MAKEX_CACHE)/pandoc-latex-template \
-			&& ( cd $(MAKEX_CACHE)/pandoc-latex-template && git pull ) \
-			|| git clone $(PANDOC_LATEX_TEMPLATE_URL) $(MAKEX_CACHE)/pandoc-latex-template \
-		) \
-		&& cd $(MAKEX_CACHE)/pandoc-latex-template \
-		&& git checkout $(PANDOC_LATEX_TEMPLATE_VERSION) \
-		&& cp $(MAKEX_CACHE)/pandoc-latex-template/eisvogel.tex $@ \
+	(   (   test -d $(MAKEX_CACHE)/pandoc-latex-template \
+	        && ( cd $(MAKEX_CACHE)/pandoc-latex-template && git pull ) \
+	        || git clone $(PANDOC_LATEX_TEMPLATE_URL) $(MAKEX_CACHE)/pandoc-latex-template \
+	    ) \
+	    && cd $(MAKEX_CACHE)/pandoc-latex-template \
+	    && git checkout $(PANDOC_LATEX_TEMPLATE_VERSION) \
+	    && cp $(MAKEX_CACHE)/pandoc-latex-template/eisvogel.tex $@ \
 	)
 
 ###########################################################################
@@ -287,13 +287,13 @@ $(PANDOC_LETTER): | $(MAKEX_CACHE) $(dir $(PANDOC_LETTER))
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Pandoc Letter$(NORMAL)"
 	@test -f $(@) \
 	|| \
-	(	(	test -d $(MAKEX_CACHE)/pandoc-letter \
-			&& ( cd $(MAKEX_CACHE)/pandoc-letter && git pull ) \
-			|| git clone $(PANDOC_LETTER_URL) $(MAKEX_CACHE)/pandoc-letter \
-		) \
-		&& cd $(MAKEX_CACHE)/pandoc-letter \
-		&& git checkout $(PANDOC_LETTER_VERSION) \
-		&& cp $(MAKEX_CACHE)/pandoc-letter/template-letter.tex $@ \
+	(   (   test -d $(MAKEX_CACHE)/pandoc-letter \
+	        && ( cd $(MAKEX_CACHE)/pandoc-letter && git pull ) \
+	        || git clone $(PANDOC_LETTER_URL) $(MAKEX_CACHE)/pandoc-letter \
+	    ) \
+	    && cd $(MAKEX_CACHE)/pandoc-letter \
+	    && git checkout $(PANDOC_LETTER_VERSION) \
+	    && cp $(MAKEX_CACHE)/pandoc-letter/template-letter.tex $@ \
 	)
 
 ###########################################################################
@@ -336,9 +336,9 @@ $(PANDOC): | $(MAKEX_CACHE) $(MAKEX_CACHE)/pandoc $(dir $(PANDOC)) $(PANDOC_LATE
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Pandoc$(NORMAL)"
 	@test -f $(@) \
 	|| \
-	( 	wget -c $(PANDOC_URL) -O $(MAKEX_CACHE)/pandoc/$(notdir $(PANDOC_URL)) \
-		&& tar -C $(MAKEX_CACHE)/pandoc -xzf $(MAKEX_CACHE)/pandoc/$(notdir $(PANDOC_URL)) \
-		&& cp -P $(MAKEX_CACHE)/pandoc/pandoc-$(PANDOC_VERSION)/bin/* $(dir $@) \
+	(   wget -c $(PANDOC_URL) -O $(MAKEX_CACHE)/pandoc/$(notdir $(PANDOC_URL)) \
+	    && tar -C $(MAKEX_CACHE)/pandoc -xzf $(MAKEX_CACHE)/pandoc/$(notdir $(PANDOC_URL)) \
+	    && cp -P $(MAKEX_CACHE)/pandoc/pandoc-$(PANDOC_VERSION)/bin/* $(dir $@) \
 	)
 
 makex-install: makex-install-pandoc
@@ -362,14 +362,14 @@ $(PANDA): | $(PANDOC) $(MAKEX_CACHE) $(dir $(PANDA))
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Panda$(NORMAL)"
 	@test -f $(@) \
 	|| \
-	(	(	test -d $(MAKEX_CACHE)/panda \
-			&& ( cd $(MAKEX_CACHE)/panda && git pull ) \
-			|| git clone $(PANDA_URL) $(MAKEX_CACHE)/panda \
-		) \
-		&& cd $(MAKEX_CACHE)/panda \
-		&& git checkout $(PANDA_VERSION) \
-		&& make install-all PREFIX=$(realpath $(dir $@)) \
-		&& sed -i 's#^pandoc #$(PANDOC) #' $@ \
+	(   (   test -d $(MAKEX_CACHE)/panda \
+	        && ( cd $(MAKEX_CACHE)/panda && git pull ) \
+	        || git clone $(PANDA_URL) $(MAKEX_CACHE)/panda \
+	    ) \
+	    && cd $(MAKEX_CACHE)/panda \
+	    && git checkout $(PANDA_VERSION) \
+	    && make install-all PREFIX=$(realpath $(dir $@)) \
+	    && sed -i 's#^pandoc #$(PANDOC) #' $@ \
 	)
 
 makex-install: makex-install-panda
@@ -399,9 +399,9 @@ $(STACK): | $(MAKEX_CACHE)/stack $(dir $(STACK))
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Haskell Stack$(NORMAL)"
 	@test -f $@ \
 	|| \
-	(	wget $(STACK_URL) -O $(MAKEX_CACHE)/stack/$(notdir $(STACK_URL)) \
-		&& tar -C $(MAKEX_CACHE)/stack -xzf $(MAKEX_CACHE)/stack/$(notdir $(STACK_URL)) \
-		&& cp $(MAKEX_CACHE)/stack/stack-$(STACK_VERSION)-linux-x86_64/stack $@ \
+	(   wget $(STACK_URL) -O $(MAKEX_CACHE)/stack/$(notdir $(STACK_URL)) \
+	    && tar -C $(MAKEX_CACHE)/stack -xzf $(MAKEX_CACHE)/stack/$(notdir $(STACK_URL)) \
+	    && cp $(MAKEX_CACHE)/stack/stack-$(STACK_VERSION)-linux-x86_64/stack $@ \
 	)
 
 STACK_CMD = $(STACK) --stack-root=$(dir $(STACK))/.stack --resolver=$(STACK_LTS)
