@@ -95,11 +95,11 @@ For a complete documentation, please refer to `makex`:
 # LETTER
 #     shortcut to panda with some default parameters
 #     to generate a letter
-# STACK
-#     path to the stack executable
-#     (see https://docs.haskellstack.org/en/stable/)
-# STACK_CMD
-#     stack command that sets stack-root and resolver
+# GHCUP, GHC, CABAL, STACK
+#     path to the ghcup, ghc, cabal, stack executables
+#     (see https://www.haskell.org/ghcup/)
+# GHC_CMD, CABAL_CMD, STACK_CMD
+#     ghc, cabal and stack commands executed through ghcup
 #
 # It also adds some targets:
 #
@@ -115,8 +115,8 @@ For a complete documentation, please refer to `makex`:
 #     install pandoc
 # makex-install-panda
 #     install panda
-# makex-install-stack
-#     install stack
+# makex-install-ghcup
+#     install ghcup
 # help
 #     runs the `welcome` target (user defined)
 #     and lists the targets with their documentation
@@ -157,11 +157,14 @@ PANDOC_LETTER_VERSION = master
 # PANDA_VERSION is a tag or branch name in the Panda repository
 PANDA_VERSION ?= master
 
-# STACK_LTS is the Haskell stack LTS version
-STACK_LTS ?= lts-20.5
+# GHCUP_INSTALL_BASE_PREFIX is the base of ghcup
+GHCUP_INSTALL_BASE_PREFIX ?= $(MAKEX_INSTALL_PATH)/haskell
 
-# STACK_VERSION is the version of stack
-STACK_VERSION ?= 2.9.1
+# HASKELL_GHC_VERSION is the ghc version to install
+HASKELL_GHC_VERSION ?= recommended
+
+# HASKELL_CABAL_VERSION is the cabal version to install
+HASKELL_CABAL_VERSION ?= recommended
 ```
 
 # Example
@@ -586,7 +589,34 @@ code blocks and are replaced by an image by panda.
 
 <img src="example/img/graph.svg" style="width:67.0%" />
 
-# Stack
+# Haskell
+
+[Haskell](https://www.haskell.org/) is a general-purpose,
+statically-typed, purely functional programming language with type
+inference and lazy evaluation.
+
+Haskell related tools are installed with GHCup.
+
+## GHCup
+
+[GHCup](https://www.haskell.org/ghcup/) is the main installer for the
+general purpose language Haskell.
+
+## GHC
+
+[GHC](https://www.haskell.org/ghc/) is a state-of-the-art, open source,
+compiler and interactive environment for the functional language
+Haskell.
+
+## Cabal
+
+[Cabal](https://www.haskell.org/cabal/) is a system for building and
+packaging Haskell libraries and programs. It defines a common interface
+for package authors and distributors to easily build their applications
+in a portable way. Cabal is part of a larger infrastructure for
+distributing, organizing, and cataloging Haskell libraries and programs.
+
+## Stack
 
 Stack is a program for developing Haskell projects. It is aimed at
 Haskellers both new and experienced. It is cross-platform and aims to

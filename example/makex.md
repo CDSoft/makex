@@ -387,7 +387,32 @@ set yrange [-1.5:1.5]
 plot sin(x) lw 4, cos(x) lw 4
 ```
 
-# Stack
+# Haskell
+
+[Haskell](https://www.haskell.org/) is a general-purpose, statically-typed,
+purely functional programming language with type inference and lazy evaluation.
+
+Haskell related tools are installed with GHCup.
+
+## GHCup
+
+[GHCup](https://www.haskell.org/ghcup/) is the main installer for the general
+purpose language Haskell.
+
+## GHC
+
+[GHC](https://www.haskell.org/ghc/) is a state-of-the-art, open source,
+compiler and interactive environment for the functional language Haskell.
+
+## Cabal
+
+[Cabal](https://www.haskell.org/cabal/) is a system for building and packaging
+Haskell libraries and programs. It defines a common interface for package
+authors and distributors to easily build their applications in a portable way.
+Cabal is part of a larger infrastructure for distributing, organizing, and
+cataloging Haskell libraries and programs.
+
+## Stack
 
 Stack is a program for developing Haskell projects. It is aimed at Haskellers
 both new and experienced. It is cross-platform and aims to support fully users
