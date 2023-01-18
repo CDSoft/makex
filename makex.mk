@@ -319,9 +319,8 @@ $(PANAM_CSS): | $(MAKEX_CACHE) $(dir $(PANAM_CSS))
 ifeq ($(MAKEX_OS)-$(MAKEX_ARCH),Linux-x86_64)
 PANDOC_ARCHIVE = pandoc-$(PANDOC_VERSION)-linux-amd64.tar.gz
 endif
-
-ifeq ($(PANDOC_ARCHIVE),)
-$(error $(MAKEX_OS)-$(MAKEX_ARCH): Unknown archivecture, can not install pandoc)
+ifeq ($(MAKEX_OS)-$(MAKEX_ARCH),Linux-aarch64)
+PANDOC_ARCHIVE = pandoc-$(PANDOC_VERSION)-linux-arm64.tar.gz
 endif
 
 PANDOC_URL = https://github.com/jgm/pandoc/releases/download/$(PANDOC_VERSION)/$(PANDOC_ARCHIVE)
@@ -329,10 +328,14 @@ PANDOC = $(MAKEX_INSTALL_PATH)/pandoc/$(PANDOC_VERSION)/pandoc
 
 export PATH := $(dir $(PANDOC)):$(PATH)
 
+check_pandoc_architecture:
+	@test -n "$(PANDOC_ARCHIVE)" \
+	|| (echo "$(BG_RED)ERROR$(NORMAL)$(RED): $(MAKEX_OS)-$(MAKEX_ARCH): Unknown archivecture, can not install pandoc$(NORMAL)"; false)
+
 $(dir $(PANDOC)) $(MAKEX_CACHE)/pandoc:
 	@mkdir -p $@
 
-$(PANDOC): | $(MAKEX_CACHE) $(MAKEX_CACHE)/pandoc $(dir $(PANDOC)) $(PANDOC_LATEX_TEMPLATE) $(PANDOC_LETTER) $(PANAM_CSS)
+$(PANDOC): check_pandoc_architecture | $(MAKEX_CACHE) $(MAKEX_CACHE)/pandoc $(dir $(PANDOC)) $(PANDOC_LATEX_TEMPLATE) $(PANDOC_LETTER) $(PANAM_CSS)
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Pandoc$(NORMAL)"
 	@test -f $(@) \
 	|| \
@@ -383,19 +386,19 @@ ifeq ($(MAKEX_OS)-$(MAKEX_ARCH),Linux-x86_64)
 STACK_ARCHIVE = stack-$(STACK_VERSION)-linux-x86_64.tar.gz
 endif
 
-ifeq ($(STACK_ARCHIVE),)
-$(error $(MAKEX_OS)-$(MAKEX_ARCH): Unknown archivecture, can not install stack)
-endif
-
 STACK_URL = https://github.com/commercialhaskell/stack/releases/download/v$(STACK_VERSION)/$(STACK_ARCHIVE)
 STACK = $(MAKEX_INSTALL_PATH)/stack/$(STACK_VERSION)/stack
 
 export PATH := $(dir $(STACK)):$(PATH)
 
+check_stack_architecture:
+	@test -n "$(STACK_ARCHIVE)" \
+	|| (echo "$(BG_RED)ERROR$(NORMAL)$(RED): $(MAKEX_OS)-$(MAKEX_ARCH): Unknown archivecture, can not install stack$(NORMAL)"; false)
+
 $(dir $(STACK)) $(MAKEX_CACHE)/stack:
 	@mkdir -p $@
 
-$(STACK): | $(MAKEX_CACHE)/stack $(dir $(STACK))
+$(STACK): check_stack_architecture | $(MAKEX_CACHE)/stack $(dir $(STACK))
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Haskell Stack$(NORMAL)"
 	@test -f $@ \
 	|| \
