@@ -66,6 +66,8 @@ For a complete documentation, please refer to `makex`:
 #
 # LUAX
 #     path to the LuaX interpreter (see https://github.com/CDSoft/luax)
+# PLUA
+#     path to the PLua interpreter (see https://github.com/CDSoft/plua)
 # UPP
 #     path to the upp executable (see https://github.com/CDSoft/upp)
 # PANDA
@@ -95,6 +97,8 @@ For a complete documentation, please refer to `makex`:
 # LETTER
 #     shortcut to panda with some default parameters
 #     to generate a letter
+# LSVG
+#     path to the lsvg executable (see https://github.com/CDSoft/lsvg)
 # GHCUP, GHC, CABAL, STACK
 #     path to the ghcup, ghc, cabal, stack executables
 #     (see https://www.haskell.org/ghcup/)
@@ -109,12 +113,16 @@ For a complete documentation, please refer to `makex`:
 #     install all makex tools
 # makex-install-luax
 #     install luax
+# makex-install-plua
+#     install plua
 # makex-install-upp
 #     install upp
 # makex-install-pandoc
 #     install pandoc
 # makex-install-panda
 #     install panda
+# makex-install-lsvg
+#     install lsvg
 # makex-install-ghcup
 #     install ghcup
 # help
@@ -140,11 +148,17 @@ MAKEX_HELP_TARGET_MAX_LEN ?= 20
 # LUAX_VERSION is a tag or branch name in the LuaX repository
 LUAX_VERSION ?= master
 
+# PLUA_VERSION is a tag or branch name in the LuaX repository
+PLUA_VERSION ?= master
+
 # UPP_VERSION is a tag or branch name in the upp repository
 UPP_VERSION ?= master
 
 # PANDOC_VERSION is the version number of pandoc
-PANDOC_VERSION ?= 3.0
+PANDOC_VERSION ?= 3.1
+
+# PANDOC_CLI_VERSION is the version number of pandoc-cli
+PANDOC_CLI_VERSION ?= 0.1
 
 # PANDOC_LATEX_TEMPLATE_VERSION is a tag or branch name in the
 # pandoc-latex-template repository
@@ -156,6 +170,9 @@ PANDOC_LETTER_VERSION = master
 
 # PANDA_VERSION is a tag or branch name in the Panda repository
 PANDA_VERSION ?= master
+
+# LSVG_VERSION is a tag or branch name in the lsvg repository
+LSVG_VERSION ?= master
 
 # GHCUP_INSTALL_BASE_PREFIX is the base of ghcup
 GHCUP_INSTALL_BASE_PREFIX ?= $(MAKEX_INSTALL_PATH)/haskell
