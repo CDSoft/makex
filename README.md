@@ -66,8 +66,6 @@ For a complete documentation, please refer to `makex`:
 #
 # LUAX
 #     path to the LuaX interpreter (see https://github.com/CDSoft/luax)
-# PLUA
-#     path to the PLua interpreter (see https://github.com/CDSoft/plua)
 # UPP
 #     path to the upp executable (see https://github.com/CDSoft/upp)
 # PANDA
@@ -113,8 +111,6 @@ For a complete documentation, please refer to `makex`:
 #     install all makex tools
 # makex-install-luax
 #     install luax
-# makex-install-plua
-#     install plua
 # makex-install-upp
 #     install upp
 # makex-install-pandoc
@@ -147,9 +143,6 @@ MAKEX_HELP_TARGET_MAX_LEN ?= 20
 
 # LUAX_VERSION is a tag or branch name in the LuaX repository
 LUAX_VERSION ?= master
-
-# PLUA_VERSION is a tag or branch name in the LuaX repository
-PLUA_VERSION ?= master
 
 # UPP_VERSION is a tag or branch name in the upp repository
 UPP_VERSION ?= master
