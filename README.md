@@ -148,10 +148,14 @@ LUAX_VERSION ?= master
 UPP_VERSION ?= master
 
 # PANDOC_VERSION is the version number of pandoc
-PANDOC_VERSION ?= 3.1
+PANDOC_VERSION ?= 3.1.2
 
 # PANDOC_CLI_VERSION is the version number of pandoc-cli
-PANDOC_CLI_VERSION ?= 0.1
+PANDOC_CLI_VERSION ?= 0.1.1
+
+# PANDOC_DYNAMIC_LINK is "no" to download a statically linked executable
+# or "yes" to compile a dynamically linked executable with cabal
+PANDOC_DYNAMIC_LINK ?= yes
 
 # PANDOC_LATEX_TEMPLATE_VERSION is a tag or branch name in the
 # pandoc-latex-template repository
