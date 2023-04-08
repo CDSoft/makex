@@ -495,4 +495,5 @@ BEAMER += -V theme:Madrid -V colortheme:default
 LETTER = $(PANDA)
 LETTER += --to latex
 LETTER += --template=$(PANDOC_LETTER)
-LETTRE += -V lang:en
+LETTER += -V documentclass:letter
+LETTER += -V lang:en
