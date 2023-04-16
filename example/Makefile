@@ -68,21 +68,21 @@ $(BUILD)/%.md: %.md makex.lua | $(UPP) $(DEPENDENCIES)
 		-p . -l makex.lua $< -o $@
 
 # Render an HTML file using $(PANDA) (i.e. pandoc and some Lua filters)
-$(BUILD)/%.html: $(BUILD)/%.md | $(PANDA) img $(DEPENDENCIES)
+$(BUILD)/%.html: $(BUILD)/%.md | $(PANDA) $(PANAM_CSS) img $(DEPENDENCIES)
 	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	$(PANDA_HTML) $(HTML_OPTS) $< -o $@
 
 # Render a PDF file using $(PANDA) (i.e. pandoc and some Lua filters)
-$(BUILD)/%.pdf: $(BUILD)/%.md | $(PANDA) img $(DEPENDENCIES)
+$(BUILD)/%.pdf: $(BUILD)/%.md | $(PANDA) $(PANDOC_LATEX_TEMPLATE) img $(DEPENDENCIES)
 	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	$(PANDA_PDF) $(PDF_OPTS) $< -o $@
 
 # Render an english letter using $(PANDA) (i.e. pandoc and some Lua filters)
-$(BUILD)/letter.pdf: $(BUILD)/letter.md | $(PANDA) img $(DEPENDENCIES)
+$(BUILD)/letter.pdf: $(BUILD)/letter.md | $(PANDA) $(PANDOC_LETTER) img $(DEPENDENCIES)
 	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
