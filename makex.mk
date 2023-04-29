@@ -94,7 +94,7 @@
 MAKEX_INSTALL_PATH ?= /var/tmp/makex
 
 # MAKEX_CACHE is the path where makex tools sources are stored and built
-MAKEX_CACHE ?= /var/tmp/makex/cache
+MAKEX_CACHE ?= $(MAKEX_INSTALL_PATH)/cache
 
 # MAKEX_HELP_TARGET_MAX_LEN is the maximal size of target names
 # used to format the help message
