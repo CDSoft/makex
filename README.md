@@ -155,19 +155,19 @@ PANDOC_CLI_VERSION ?= 0.1.1
 
 # PANDOC_DYNAMIC_LINK is "no" to download a statically linked executable
 # or "yes" to compile a dynamically linked executable with cabal
-PANDOC_DYNAMIC_LINK ?= yes
+PANDOC_DYNAMIC_LINK ?= no
 
 # PANDOC_LATEX_TEMPLATE_VERSION is a tag or branch name in the
 # pandoc-latex-template repository
-PANDOC_LATEX_TEMPLATE_VERSION = master
+PANDOC_LATEX_TEMPLATE_VERSION ?= master
 
 # PANDOC_LETTER_VERSION is a tag or branch name in the
 # pandoc-letter repository
-PANDOC_LETTER_VERSION = master
+PANDOC_LETTER_VERSION ?= master
 
 # PANAM_VERSION is a tag or branch name in the
 # pan-am repository
-PANAM_VERSION = master
+PANAM_VERSION ?= master
 
 # PANDA_VERSION is a tag or branch name in the Panda repository
 PANDA_VERSION ?= master
@@ -183,6 +183,20 @@ HASKELL_GHC_VERSION ?= recommended
 
 # HASKELL_CABAL_VERSION is the cabal version to install
 HASKELL_CABAL_VERSION ?= recommended
+
+# RUSTUP_HOME is the rustup installation path
+RUSTUP_HOME ?= $(MAKEX_INSTALL_PATH)/rustup
+
+# CARGO_HOME is the cargo installation path
+CARGO_HOME ?= $(MAKEX_INSTALL_PATH)/cargo
+
+# TYPST_COMPILATION is "no" to download a precompiled executable
+# or "yes" to compile typst with cargo
+TYPST_COMPILATION ?= no
+
+# TYPST_VERSION is a tag or branch name in the
+# typst repository
+TYPST_VERSION ?= v0.3.0
 ```
 
 # Example
