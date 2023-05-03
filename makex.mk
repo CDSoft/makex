@@ -25,6 +25,8 @@
 #
 # LUAX
 #     path to the LuaX interpreter (see https://github.com/CDSoft/luax)
+# YPP, YPP_LUA, YPP_LUAX, YPP_PANDOC
+#     path to the ypp executables (see https://github.com/CDSoft/ypp)
 # UPP
 #     path to the upp executable (see https://github.com/CDSoft/upp)
 # PANDA
@@ -74,6 +76,8 @@
 #     install all makex tools
 # makex-install-luax
 #     install luax
+# makex-install-ypp
+#     install ypp
 # makex-install-upp
 #     install upp
 # makex-install-pandoc
@@ -110,6 +114,9 @@ MAKEX_HELP_TARGET_MAX_LEN ?= 20
 
 # LUAX_VERSION is a tag or branch name in the LuaX repository
 LUAX_VERSION ?= master
+
+# YPP_VERSION is a tag or branch name in the ypp repository
+YPP_VERSION ?= master
 
 # UPP_VERSION is a tag or branch name in the upp repository
 UPP_VERSION ?= master
@@ -333,6 +340,37 @@ makex-install: makex-install-luax
 makex-install-luax: $(LUAX)
 
 ###########################################################################
+# YPP
+###########################################################################
+
+YPP_URL = https://github.com/CDSoft/ypp
+YPP = $(MAKEX_INSTALL_PATH)/ypp/$(YPP_VERSION)/bin/ypp
+YPP_LUA = $(MAKEX_INSTALL_PATH)/ypp/$(YPP_VERSION)/bin/ypp-lua
+YPP_LUAX = $(MAKEX_INSTALL_PATH)/ypp/$(YPP_VERSION)/bin/ypp-luax
+YPP_PANDOC = $(MAKEX_INSTALL_PATH)/ypp/$(YPP_VERSION)/bin/ypp-pandoc
+
+export PATH := $(dir $(YPP)):$(PATH)
+
+$(dir $(YPP)):
+	@mkdir -p $@
+
+$(YPP) $(YPP_LUA) $(YPP_LUAX) $(YPP_PANDOC): | $(LUAX) $(MAKEX_CACHE) $(dir $(YPP))
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install ypp$(NORMAL)"
+	@test -f $(@) \
+	|| \
+	(   (   test -d $(MAKEX_CACHE)/ypp \
+	        && ( cd $(MAKEX_CACHE)/ypp && git pull ) \
+	        || git clone $(YPP_URL) $(MAKEX_CACHE)/ypp \
+	    ) \
+	    && cd $(MAKEX_CACHE)/ypp \
+	    && git checkout $(YPP_VERSION) \
+	    && make install PREFIX=$(realpath $(dir $@)/..) \
+	)
+
+makex-install: makex-install-ypp
+makex-install-ypp: $(YPP) $(YPP_LUA) $(YPP_LUAX) $(YPP_PANDOC)
+
+###########################################################################
 # UPP
 ###########################################################################
 
@@ -354,7 +392,7 @@ $(UPP): | $(LUAX) $(MAKEX_CACHE) $(dir $(UPP))
 	    ) \
 	    && cd $(MAKEX_CACHE)/upp \
 	    && git checkout $(UPP_VERSION) \
-	    && make install LUAX=$(LUAX) PREFIX=$(realpath $(dir $@)/..) \
+	    && make install PREFIX=$(realpath $(dir $@)/..) \
 	)
 
 makex-install: makex-install-upp
