@@ -56,6 +56,10 @@
 #     to generate a letter
 # LSVG
 #     path to the lsvg executable (see https://github.com/CDSoft/lsvg)
+# PLANTUML
+#     path to plantuml.jar
+# DITAA
+#     path to ditaa.jar
 # GHCUP, GHC, CABAL, STACK
 #     path to the ghcup, ghc, cabal, stack executables
 #     (see https://www.haskell.org/ghcup/)
@@ -76,6 +80,10 @@
 #     install pandoc
 # makex-install-panda
 #     install panda
+# makex-install-plantuml
+#     install PlantUML
+# makex-install-ditaa
+#     install ditaa
 # makex-install-lsvg
 #     install lsvg
 # makex-install-ghcup
@@ -156,6 +164,12 @@ TYPST_COMPILATION ?= no
 # TYPST_VERSION is a tag or branch name in the
 # typst repository
 TYPST_VERSION ?= v0.3.0
+
+# PLANTUML_VERSION is the PlantUML version to install
+PLANTUML_VERSION = 1.2023.6
+
+# DITAA_VERSION is the ditaa version to install
+DITAA_VERSION = 0.11.0
 
 #}}}
 
@@ -569,6 +583,40 @@ $(LSVG): | $(LUAX) $(MAKEX_CACHE) $(dir $(LSVG))
 
 makex-install: makex-install-lsvg
 makex-install-lsvg: $(LSVG)
+
+###########################################################################
+# PlantUML
+###########################################################################
+
+PLANTUML_URL = https://github.com/plantuml/plantuml/releases/download/v$(PLANTUML_VERSION)/plantuml-$(PLANTUML_VERSION).jar
+PLANTUML = $(MAKEX_INSTALL_PATH)/plantuml/$(notdir $(PLANTUML_URL))
+
+$(dir $(PLANTUML)):
+	@mkdir -p $@
+
+$(PLANTUML): | $(dir $(PLANTUML))
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install PlantUML$(NORMAL)"
+	@test -f $@ || wget $(PLANTUML_URL) -O $@
+
+makex-install: makex-install-plantuml
+makex-install-plantuml: $(PLANTUML)
+
+###########################################################################
+# ditaa
+###########################################################################
+
+DITAA_URL = https://github.com/stathissideris/ditaa/releases/download/v$(DITAA_VERSION)/ditaa-$(DITAA_VERSION)-standalone.jar
+DITAA = $(MAKEX_INSTALL_PATH)/ditaa/$(notdir $(DITAA_URL))
+
+$(dir $(DITAA)):
+	@mkdir -p $@
+
+$(DITAA): | $(dir $(DITAA))
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install ditaa$(NORMAL)"
+	@test -f $@ || wget $(DITAA_URL) -O $@
+
+makex-install: makex-install-ditaa
+makex-install-ditaa: $(DITAA)
 
 ###########################################################################
 # Panda shortcuts
