@@ -75,14 +75,14 @@ $(BUILD)/%.html: $(BUILD)/%.md | $(PANDA) $(PANAM_CSS) img $(DEPENDENCIES)
 	$(PANDA_HTML) $(HTML_OPTS) $< -o $@
 
 # Render a PDF file using $(PANDA) (i.e. pandoc and some Lua filters)
-$(BUILD)/%.pdf: $(BUILD)/%.md | $(PANDA) $(PANDOC_LATEX_TEMPLATE) img $(DEPENDENCIES)
+$(BUILD)/%.pdf: $(BUILD)/%.md | $(PANDA) $(LATEX_TEMPLATE) img $(DEPENDENCIES)
 	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	$(PANDA_PDF) $(PDF_OPTS) $< -o $@
 
 # Render an english letter using $(PANDA) (i.e. pandoc and some Lua filters)
-$(BUILD)/letter.pdf: $(BUILD)/letter.md | $(PANDA) $(PANDOC_LETTER) img $(DEPENDENCIES)
+$(BUILD)/letter.pdf: $(BUILD)/letter.md | $(PANDA) $(LETTER) img $(DEPENDENCIES)
 	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
@@ -94,7 +94,7 @@ $(BUILD)/letter.md: $(MAKEX_CACHE)/pandoc-letter/example/letter.md | $(PANDA)
 	@cp $< $@
 	@sed -i 's#example/#$(dir $<)#' $@
 
-$(MAKEX_CACHE)/pandoc-letter/example/letter.md: $(PANDOC_LETTER)
+$(MAKEX_CACHE)/pandoc-letter/example/letter.md: $(LETTER)
 
 # Render a Github Markdown file using $(PANDA)
 ../README.md: $(BUILD)/makex.md fix_links.lua | $(PANDA) img $(DEPENDENCIES)

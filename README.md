@@ -1,4 +1,4 @@
-# LuaX and pandoc based tools
+# LuaX and Pandoc based tools
 
 `makex.mk` is a Makefile. It is intended to be included in any Makefile
 to easily install some tools based on LuaX and Pandoc to pre-process
@@ -56,8 +56,8 @@ The full repository is available on Github:
 `makex.mk` usage is pretty simple:
 
 1.  include `makex.mk` in another Makefile
-2.  use `$(LUAX)`, `$(UPP)`, `$(PANDA_HTML)`, `$(PANDA_PDF)`, … to call
-    `luax`, `upp`, `panda` (to generate HTML or PDF files)
+2.  use `$(LUAX)`, `$(YPP)`, `$(PANDOC_HTML)`, `$(PANDOC_PDF)`, … to
+    call `luax`, `ypp`, `pandoc` (to generate HTML or PDF files)
 
 For a complete documentation, please refer to `makex`:
 
@@ -66,37 +66,46 @@ For a complete documentation, please refer to `makex`:
 #
 # LUAX
 #     path to the LuaX interpreter (see https://github.com/CDSoft/luax)
+# YPP, YPP_LUA, YPP_LUAX, YPP_PANDOC
+#     path to the ypp executables (see https://github.com/CDSoft/ypp)
 # UPP
 #     path to the upp executable (see https://github.com/CDSoft/upp)
 # PANDA
 #     path to the panda script (see https://github.com/CDSoft/panda)
 # PANDOC
 #     path to the pandoc executable (see https://pandoc.org)
-# PANDOC_LATEX_TEMPLATE
+# LATEX_TEMPLATE
+#     path to a LaTeX template
+#     (see https://github.com/Wandmalfarbe/pandoc-latex-template.git)
+# LETTER
 #     path to a LaTeX template
 #     (see https://github.com/Wandmalfarbe/pandoc-latex-template.git)
 # PANAM_CSS
 #     path to a CSS file (see https://benjam.info/panam)
-# PANDA_MD
-#     shortcut to panda with some default parameters
+# PANDOC_MD, PANDA_MD
+#     shortcut to pandoc/panda with some default parameters
 #     to generate Markdown documents
-# PANDA_GFM
-#     shortcut to panda with some default parameters
+# PANDOC_GFM, PANDA_GFM
+#     shortcut to pandoc/panda with some default parameters
 #     to generate Github Markdown documents
-# PANDA_HTML
-#     shortcut to panda with some default parameters
+# PANDOC_HTML, PANDA_HTML
+#     shortcut to pandoc/panda with some default parameters
 #     to generate HTML documents
-# PANDA_PDF
-#     shortcut to panda with some default parameters
+# PANDOC_PDF, PANDA_PDF
+#     shortcut to pandoc/panda with some default parameters
 #     to generate PDF documents
-# BEAMER
-#     shortcut to panda with some default parameters
+# PANDOC_BEAMER, PANDA_BEAMER
+#     shortcut to pandoc/panda with some default parameters
 #     to generate beamer slideshows
-# LETTER
-#     shortcut to panda with some default parameters
+# PANDOC_LETTER, PANDA_LETTER
+#     shortcut to pandoc/panda with some default parameters
 #     to generate a letter
 # LSVG
 #     path to the lsvg executable (see https://github.com/CDSoft/lsvg)
+# PLANTUML
+#     path to plantuml.jar
+# DITAA
+#     path to ditaa.jar
 # GHCUP, GHC, CABAL, STACK
 #     path to the ghcup, ghc, cabal, stack executables
 #     (see https://www.haskell.org/ghcup/)
@@ -111,12 +120,18 @@ For a complete documentation, please refer to `makex`:
 #     install all makex tools
 # makex-install-luax
 #     install luax
+# makex-install-ypp
+#     install ypp
 # makex-install-upp
 #     install upp
 # makex-install-pandoc
 #     install pandoc
 # makex-install-panda
 #     install panda
+# makex-install-plantuml
+#     install PlantUML
+# makex-install-ditaa
+#     install ditaa
 # makex-install-lsvg
 #     install lsvg
 # makex-install-ghcup
@@ -135,7 +150,7 @@ For a complete documentation, please refer to `makex`:
 MAKEX_INSTALL_PATH ?= /var/tmp/makex
 
 # MAKEX_CACHE is the path where makex tools sources are stored and built
-MAKEX_CACHE ?= /var/tmp/makex/cache
+MAKEX_CACHE ?= $(MAKEX_INSTALL_PATH)/cache
 
 # MAKEX_HELP_TARGET_MAX_LEN is the maximal size of target names
 # used to format the help message
@@ -143,6 +158,9 @@ MAKEX_HELP_TARGET_MAX_LEN ?= 20
 
 # LUAX_VERSION is a tag or branch name in the LuaX repository
 LUAX_VERSION ?= master
+
+# YPP_VERSION is a tag or branch name in the ypp repository
+YPP_VERSION ?= master
 
 # UPP_VERSION is a tag or branch name in the upp repository
 UPP_VERSION ?= master
@@ -197,6 +215,12 @@ TYPST_COMPILATION ?= no
 # TYPST_VERSION is a tag or branch name in the
 # typst repository
 TYPST_VERSION ?= v0.3.0
+
+# PLANTUML_VERSION is the PlantUML version to install
+PLANTUML_VERSION = 1.2023.6
+
+# DITAA_VERSION is the ditaa version to install
+DITAA_VERSION = 0.11.0
 ```
 
 # Example
@@ -259,14 +283,14 @@ $(BUILD)/%.html: $(BUILD)/%.md | $(PANDA) $(PANAM_CSS) img $(DEPENDENCIES)
 	$(PANDA_HTML) $(HTML_OPTS) $< -o $@
 
 # Render a PDF file using $(PANDA) (i.e. pandoc and some Lua filters)
-$(BUILD)/%.pdf: $(BUILD)/%.md | $(PANDA) $(PANDOC_LATEX_TEMPLATE) img $(DEPENDENCIES)
+$(BUILD)/%.pdf: $(BUILD)/%.md | $(PANDA) $(LATEX_TEMPLATE) img $(DEPENDENCIES)
 	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	$(PANDA_PDF) $(PDF_OPTS) $< -o $@
 
 # Render an english letter using $(PANDA) (i.e. pandoc and some Lua filters)
-$(BUILD)/letter.pdf: $(BUILD)/letter.md | $(PANDA) $(PANDOC_LETTER) img $(DEPENDENCIES)
+$(BUILD)/letter.pdf: $(BUILD)/letter.md | $(PANDA) $(LETTER) img $(DEPENDENCIES)
 	@echo '${PANDA_COLOR}[PANDA]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
@@ -278,7 +302,7 @@ $(BUILD)/letter.md: $(MAKEX_CACHE)/pandoc-letter/example/letter.md | $(PANDA)
 	@cp $< $@
 	@sed -i 's#example/#$(dir $<)#' $@
 
-$(MAKEX_CACHE)/pandoc-letter/example/letter.md: $(PANDOC_LETTER)
+$(MAKEX_CACHE)/pandoc-letter/example/letter.md: $(LETTER)
 
 # Render a Github Markdown file using $(PANDA)
 ../README.md: $(BUILD)/makex.md fix_links.lua | $(PANDA) img $(DEPENDENCIES)

@@ -2,13 +2,13 @@
 title: makex - LuaX and pandoc based tools
 date: @(DATE)
 author: @(AUTHOR)
-keywords: [Lua, LuaX, Pandoc, Panda, UPP, Make]
+keywords: [Lua, LuaX, Pandoc, ypp, Panda, UPP, Make]
 book: true
 titlepage: true
 toc-own-page: true
 ---
 
-# LuaX and pandoc based tools
+# LuaX and Pandoc based tools
 
 `makex.mk` is a Makefile. It is intended to be included in any Makefile to
 easily install some tools based on LuaX and Pandoc to pre-process files and
@@ -64,8 +64,8 @@ The full repository is available on Github: <https://github.com/CDSoft/makex>.
 
 ?(false)
 1. include `makex.mk` in another Makefile
-2. use `$(LUAX)`, `$(UPP)`, `$(PANDA_HTML)`, `$(PANDA_PDF)`, ... to call
-   `luax`, `upp`, `panda` (to generate HTML or PDF files)
+2. use `$(LUAX)`, `$(YPP)`, `$(PANDOC_HTML)`, `$(PANDOC_PDF)`, ... to call
+   `luax`, `ypp`, `pandoc` (to generate HTML or PDF files)
 ?(true)
 
 For a complete documentation, please refer to `makex`:
