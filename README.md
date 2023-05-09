@@ -106,6 +106,8 @@ For a complete documentation, please refer to `makex`:
 #     path to plantuml.jar
 # DITAA
 #     path to ditaa.jar
+# MERMAID
+#     path to mmdc (Mermaid)
 # GHCUP, GHC, CABAL, STACK
 #     path to the ghcup, ghc, cabal, stack executables
 #     (see https://www.haskell.org/ghcup/)
@@ -132,6 +134,8 @@ For a complete documentation, please refer to `makex`:
 #     install PlantUML
 # makex-install-ditaa
 #     install ditaa
+# makex-install-mermaid
+#     install mermaid
 # makex-install-lsvg
 #     install lsvg
 # makex-install-ghcup

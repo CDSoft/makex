@@ -65,6 +65,8 @@
 #     path to plantuml.jar
 # DITAA
 #     path to ditaa.jar
+# MERMAID
+#     path to mmdc (Mermaid)
 # GHCUP, GHC, CABAL, STACK
 #     path to the ghcup, ghc, cabal, stack executables
 #     (see https://www.haskell.org/ghcup/)
@@ -91,6 +93,8 @@
 #     install PlantUML
 # makex-install-ditaa
 #     install ditaa
+# makex-install-mermaid
+#     install mermaid
 # makex-install-lsvg
 #     install lsvg
 # makex-install-ghcup
@@ -658,6 +662,28 @@ $(DITAA): | $(dir $(DITAA))
 
 makex-install: makex-install-ditaa
 makex-install-ditaa: $(DITAA)
+
+###########################################################################
+# Mermaid
+###########################################################################
+
+MERMAID_MODULE = @mermaid-js/mermaid-cli
+MERMAID_INSTALL_PATH = $(MAKEX_INSTALL_PATH)/mermaid
+MERMAID = $(MERMAID_INSTALL_PATH)/node_modules/.bin/mmdc
+
+export PATH := $(dir $(MERMAID)):$(PATH)
+
+$(MERMAID): |
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install mermaid$(NORMAL)"
+	@test -f $(@) \
+	|| \
+	(   mkdir -p $(MERMAID_INSTALL_PATH) \
+	    && cd $(MERMAID_INSTALL_PATH) \
+	    && npm install $(MERMAID_MODULE) \
+	)
+
+makex-install: makex-install-mermaid
+makex-install-mermaid: $(MERMAID)
 
 ###########################################################################
 # Panda shortcuts
