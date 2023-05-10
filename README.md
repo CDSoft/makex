@@ -79,7 +79,7 @@ For a complete documentation, please refer to `makex`:
 #     (see https://github.com/Wandmalfarbe/pandoc-latex-template.git)
 # LETTER
 #     path to a LaTeX template
-#     (see https://github.com/Wandmalfarbe/pandoc-latex-template.git)
+#     (see https://github.com/aaronwolen/pandoc-letter.git)
 # PANAM_CSS
 #     path to a CSS file (see https://benjam.info/panam)
 # PANDOC_MD, PANDA_MD
