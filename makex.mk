@@ -536,7 +536,7 @@ export PANDA_CACHE ?= $(MAKEX_CACHE)/.panda
 $(dir $(PANDA)) $(PANDA_CACHE):
 	@mkdir -p $@
 
-$(PANDA): | $(PANDOC) $(MAKEX_CACHE) $(dir $(PANDA)) $(PANDA_CACHE)
+$(PANDA): | $(LUAX) $(PANDOC) $(MAKEX_CACHE) $(dir $(PANDA)) $(PANDA_CACHE)
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Panda$(NORMAL)"
 	@test -f $(@) \
 	|| \
