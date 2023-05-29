@@ -365,7 +365,7 @@ _gnuplot = "{{gnuplot}}"
     }
     ```
 
-```{.dot render="{{dot}}" img="img/panda" width=67%}
+```{.dot render="{{dot}}" width=67%}
 digraph {
     rankdir=LR;
     input -> pandoc -> output
@@ -381,7 +381,7 @@ digraph {
     plot sin(x) lw 4, cos(x) lw 4
     ```
 
-```{render="{{gnuplot}}" img="img/graph" width=67%}
+```{render="{{gnuplot}}" width=67%}
 set xrange [-pi:pi]
 set yrange [-1.5:1.5]
 plot sin(x) lw 4, cos(x) lw 4

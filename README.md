@@ -270,6 +270,8 @@ mrproper: clean makex-clean
 welcome:
 	@echo '${TEXT_COLOR}makex${NORMAL} usage example'
 
+export PANDA_IMG := img
+
 # Preprocess a Markdown file with $(UPP).
 # The preprocessed file is also a Markdown file
 # that can be used by $(PANDA).
@@ -299,7 +301,7 @@ $(BUILD)/letter.pdf: $(BUILD)/letter.md | $(PANDA) $(LETTER) img $(DEPENDENCIES)
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	LANG=en \
-	$(LETTER) $< -o $@
+	$(PANDA_LETTER) $< -o $@
 
 $(BUILD)/letter.md: $(MAKEX_CACHE)/pandoc-letter/example/letter.md | $(PANDA)
 	@echo '${PANDA_COLOR}[CP]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
@@ -639,7 +641,8 @@ code blocks and are replaced by an image by panda.
     }
     ```
 
-<img src="example/img/panda.svg" class="dot" style="width:67.0%" />
+<img src="example/img/fbc1d5fae695b3f059a6a177a655c3e6bd546640.svg"
+class="dot" style="width:67.0%" />
 
     ```{render="{{gnuplot}}" width=67%}
     set xrange [-pi:pi]
@@ -647,7 +650,8 @@ code blocks and are replaced by an image by panda.
     plot sin(x) lw 4, cos(x) lw 4
     ```
 
-<img src="example/img/graph.svg" style="width:67.0%" />
+<img src="example/img/011d4265ca7dd8d99c2959c1d7a2ccd1b5a8ec62.svg"
+style="width:67.0%" />
 
 # Haskell
 

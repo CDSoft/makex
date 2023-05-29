@@ -58,6 +58,8 @@ mrproper: clean makex-clean
 welcome:
 	@echo '${TEXT_COLOR}makex${NORMAL} usage example'
 
+export PANDA_IMG := img
+
 # Preprocess a Markdown file with $(UPP).
 # The preprocessed file is also a Markdown file
 # that can be used by $(PANDA).
@@ -87,7 +89,7 @@ $(BUILD)/letter.pdf: $(BUILD)/letter.md | $(PANDA) $(LETTER) img $(DEPENDENCIES)
 	@PANDA_TARGET=$@ \
 	PANDA_DEP_FILE=$(DEPENDENCIES)/$(notdir $@).panda.d \
 	LANG=en \
-	$(LETTER) $< -o $@
+	$(PANDA_LETTER) $< -o $@
 
 $(BUILD)/letter.md: $(MAKEX_CACHE)/pandoc-letter/example/letter.md | $(PANDA)
 	@echo '${PANDA_COLOR}[CP]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
