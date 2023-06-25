@@ -170,7 +170,7 @@ YPP_VERSION ?= master
 UPP_VERSION ?= master
 
 # PANDOC_VERSION is the version number of pandoc
-PANDOC_VERSION ?= 3.1.3
+PANDOC_VERSION ?= 3.1.4
 
 # PANDOC_CLI_VERSION is the version number of pandoc-cli
 PANDOC_CLI_VERSION ?= 0.1.1
@@ -218,7 +218,7 @@ TYPST_COMPILATION ?= no
 
 # TYPST_VERSION is a tag or branch name in the
 # typst repository
-TYPST_VERSION ?= v0.4.0
+TYPST_VERSION ?= v0.5.0
 
 # PLANTUML_VERSION is the PlantUML version to install
 PLANTUML_VERSION = 1.2023.8
