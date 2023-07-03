@@ -248,9 +248,9 @@ all: $(BUILD)/makex.html
 all: $(BUILD)/makex.pdf
 all: $(BUILD)/letter.pdf
 
-# first include makex.mk to add makex targets ($(LUAX), $(UPP), ...)
+# first include makex.mk to add makex targets ($(LUAX), $(YPP), ...)
 include ../makex.mk
-UPP_COLOR = ${BLACK}${BG_GREEN}
+YPP_COLOR = ${BLACK}${BG_GREEN}
 PANDA_COLOR = ${BLACK}${BG_GREEN}
 
 # Note that comments starting with `##` are used by the `help` target
@@ -272,13 +272,13 @@ welcome:
 
 export PANDA_IMG := img
 
-# Preprocess a Markdown file with $(UPP).
+# Preprocess a Markdown file with $(YPP).
 # The preprocessed file is also a Markdown file
 # that can be used by $(PANDA).
-$(BUILD)/%.md: %.md makex.lua | $(UPP) $(DEPENDENCIES)
-	@echo '${UPP_COLOR}[UPP]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
+$(BUILD)/%.md: %.md makex.lua | $(YPP) $(DEPENDENCIES)
+	@echo '${YPP_COLOR}[YPP]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@mkdir -p $(dir $@)
-	@$(UPP) -MT $@ -MF $(DEPENDENCIES)/$(notdir $@).upp.d \
+	@$(YPP) --MD --MT $@ --MF $(DEPENDENCIES)/$(notdir $@).ypp.d \
 		-p . -l makex.lua $< -o $@
 
 # Render an HTML file using $(PANDA) (i.e. pandoc and some Lua filters)
@@ -478,28 +478,30 @@ Typical usages are:
 The next chapters present some tools written in Lua/LuaX or using Lua as
 a scripting engine.
 
-# UPP
+# Ypp
 
-UPP is a minimalist and generic text preprocessor using Lua macros.
+Ypp is a minimalist and generic text preprocessor using Lua macros.
 
-UPP is compiled by LuaX, i.e. Lua and LuaX functions and modules are
+Ypp is compiled by LuaX, i.e. Lua and LuaX functions and modules are
 available in macros.
 
-More information here: <http://cdelord.fr/upp>
+More information here: <http://cdelord.fr/ypp>
 
-UPP is pretty simple. It searches for Lua expressions and replaces
+Ypp is pretty simple. It searches for Lua expressions and replaces
 macros with their results.
 
-| Macro                 | Result                                                                           |
-|:----------------------|:---------------------------------------------------------------------------------|
-| `$(...)` or `@(...)`  | Evaluates the Lua expression `...` and replaces the macro by its result          |
-| `:(...)` or `@@(...)` | Executes the Lua chunk `...` and replaces the macro by its result (if not `nil`) |
+| Macro     | Result                                                                           |
+|:----------|:---------------------------------------------------------------------------------|
+| `@(...)`  | Evaluates the Lua expression `...` and replaces the macro by its result          |
+| `@@(...)` | Executes the Lua chunk `...` and replaces the macro by its result (if not `nil`) |
+
+Some expression do not require parentheses (function calls).
 
 ## Example
 
 ``` markdown
 $$
-\sum_{i=1}^{100} i^2 = @(F.range(100):map(function(x) return x*x end):sum())
+\sum_{i=1}^{100} i^2 = @F.range(100):map(function(x) return x*x end):sum()
 $$
 ```
 
@@ -512,21 +514,22 @@ is rendered as
 Macros can also define variables reusable later by other macros.
 
 ``` markdown
-@@( local foo = 42
+@@[[
+    local foo = 42
     N = foo * 23 + 34
     local function sq(x) return x*x end
     function sumsq(n) return F.range(N):map(sq):sum() end
-)
+]]
 ```
 
 defines `N` ($N = 1000$) which can be read in a Lua expression or with
-`@(N)` and `sumsq` which computes the sum of squares.
+`@N` and `sumsq` which computes the sum of squares.
 
 Then
 
 ``` markdown
 $$
-\sum_{i=1}^{@(N)} i^2 = @(sumsq(N))
+\sum_{i=1}^{@N} i^2 = @sumsq(N)
 $$
 ```
 
@@ -719,7 +722,7 @@ The documentation of Stack is here:
 [**LuaX**](https://github.com/CDSoft/luax):
 <https://github.com/CDSoft/luax>
 
-> LuaX is a Lua interpretor and REPL based on Lua 5.4.4, augmented with
+> LuaX is a Lua interpretor and REPL based on Lua 5.4.6, augmented with
 > some useful packages. LuaX can also produce standalone executables
 > from Lua scripts.
 

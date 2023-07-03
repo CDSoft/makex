@@ -209,23 +209,25 @@ Typical usages are:
 
 The next chapters present some tools written in Lua/LuaX or using Lua as a scripting engine.
 
-# UPP
+# Ypp
 
-UPP is a minimalist and generic text preprocessor using Lua macros.
+Ypp is a minimalist and generic text preprocessor using Lua macros.
 
-UPP is compiled by LuaX, i.e. Lua and LuaX functions and modules are available
+Ypp is compiled by LuaX, i.e. Lua and LuaX functions and modules are available
 in macros.
 
-More information here: <http://cdelord.fr/upp>
+More information here: <http://cdelord.fr/ypp>
 
-UPP is pretty simple. It searches for Lua expressions and replaces macros with their results.
+Ypp is pretty simple. It searches for Lua expressions and replaces macros with their results.
 
 ?(false)
 
-Macro                   Result
------------------------ -------------------------------------------------------------------------
-`$(...)` or `@(...)`    Evaluates the Lua expression `...` and replaces the macro by its result
-`:(...)` or `@@(...)`   Executes the Lua chunk `...` and replaces the macro by its result (if not `nil`{.lua})
+Macro       Result
+----------- -------------------------------------------------------------------------
+`@(...)`    Evaluates the Lua expression `...` and replaces the macro by its result
+`@@(...)`   Executes the Lua chunk `...` and replaces the macro by its result (if not `nil`{.lua})
+
+Some expression do not require parentheses (function calls).
 
 ?(true)
 
@@ -235,7 +237,7 @@ Macro                   Result
 
 ``````{.markdown}
 $$
-\sum_{i=1}^{100} i^2 = @(F.range(100):map(function(x) return x*x end):sum())
+\sum_{i=1}^{100} i^2 = @F.range(100):map(function(x) return x*x end):sum()
 $$
 ``````
 
@@ -244,28 +246,30 @@ $$
 is rendered as
 
 > $$
-> \sum_{i=1}^{100} i^2 = @(F.range(100):map(function(x) return x*x end):sum())
+> \sum_{i=1}^{100} i^2 = @F.range(100):map(function(x) return x*x end):sum()
 > $$
 
 Macros can also define variables reusable later by other macros.
 
 ?(false)
 ``````{.markdown}
-@@( local foo = 42
+@@[[
+    local foo = 42
     N = foo * 23 + 34
     local function sq(x) return x*x end
     function sumsq(n) return F.range(N):map(sq):sum() end
-)
+]]
 ``````
 ?(true)
 
-@@( local foo = 42
+@@[[
+    local foo = 42
     N = foo * 23 + 34
     local function sq(x) return x*x end
     function sumsq(n) return F.range(N):map(sq):sum() end
-)
+]]
 
-defines `N` ($N = @(N)$) which can be read in a Lua expression or with ?(false)`@(N)`?(true)
+defines `N` ($N = @N$) which can be read in a Lua expression or with ?(false)`@N`?(true)
 and `sumsq` which computes the sum of squares.
 
 Then
@@ -274,7 +278,7 @@ Then
 
 ``````{.markdown}
 $$
-\sum_{i=1}^{@(N)} i^2 = @(sumsq(N))
+\sum_{i=1}^{@N} i^2 = @sumsq(N)
 $$
 ``````
 
@@ -283,7 +287,7 @@ $$
 becomes
 
 > $$
-> \sum_{i=1}^{@(N)} i^2 = @(sumsq(N))
+> \sum_{i=1}^{@N} i^2 = @sumsq(N)
 > $$
 
 # Pandoc
@@ -446,7 +450,7 @@ The documentation of Stack is here: <https://docs.haskellstack.org/en/stable/>
 > The reference manual is the official definition of the Lua language.
 
 @(link "LuaX" "https://github.com/CDSoft/luax")
-> LuaX is a Lua interpretor and REPL based on Lua 5.4.4, augmented with some
+> LuaX is a Lua interpretor and REPL based on Lua 5.4.6, augmented with some
 > useful packages. LuaX can also produce standalone executables from Lua
 > scripts.
 

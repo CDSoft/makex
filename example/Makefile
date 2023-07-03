@@ -36,9 +36,9 @@ all: $(BUILD)/makex.html
 all: $(BUILD)/makex.pdf
 all: $(BUILD)/letter.pdf
 
-# first include makex.mk to add makex targets ($(LUAX), $(UPP), ...)
+# first include makex.mk to add makex targets ($(LUAX), $(YPP), ...)
 include ../makex.mk
-UPP_COLOR = ${BLACK}${BG_GREEN}
+YPP_COLOR = ${BLACK}${BG_GREEN}
 PANDA_COLOR = ${BLACK}${BG_GREEN}
 
 # Note that comments starting with `##` are used by the `help` target
@@ -60,13 +60,13 @@ welcome:
 
 export PANDA_IMG := img
 
-# Preprocess a Markdown file with $(UPP).
+# Preprocess a Markdown file with $(YPP).
 # The preprocessed file is also a Markdown file
 # that can be used by $(PANDA).
-$(BUILD)/%.md: %.md makex.lua | $(UPP) $(DEPENDENCIES)
-	@echo '${UPP_COLOR}[UPP]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
+$(BUILD)/%.md: %.md makex.lua | $(YPP) $(DEPENDENCIES)
+	@echo '${YPP_COLOR}[YPP]${NORMAL} ${TARGET_COLOR}$< -> $@${NORMAL}'
 	@mkdir -p $(dir $@)
-	@$(UPP) -MT $@ -MF $(DEPENDENCIES)/$(notdir $@).upp.d \
+	@$(YPP) --MD --MT $@ --MF $(DEPENDENCIES)/$(notdir $@).ypp.d \
 		-p . -l makex.lua $< -o $@
 
 # Render an HTML file using $(PANDA) (i.e. pandoc and some Lua filters)
