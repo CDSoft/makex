@@ -177,7 +177,7 @@ TYPST_COMPILATION ?= no
 
 # TYPST_VERSION is a tag or branch name in the
 # typst repository
-TYPST_VERSION ?= v0.5.0
+TYPST_VERSION ?= v0.6.0
 
 # PLANTUML_VERSION is the PlantUML version to install
 PLANTUML_VERSION = 1.2023.9
