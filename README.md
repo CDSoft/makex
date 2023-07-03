@@ -221,7 +221,7 @@ TYPST_COMPILATION ?= no
 TYPST_VERSION ?= v0.5.0
 
 # PLANTUML_VERSION is the PlantUML version to install
-PLANTUML_VERSION = 1.2023.8
+PLANTUML_VERSION = 1.2023.9
 
 # DITAA_VERSION is the ditaa version to install
 DITAA_VERSION = 0.11.0
