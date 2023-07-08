@@ -536,7 +536,7 @@ export PANDA_CACHE ?= $(MAKEX_CACHE)/.panda
 $(dir $(PANDA)) $(PANDA_CACHE):
 	@mkdir -p $@
 
-$(PANDA): | $(LUAX) $(PANDOC) $(MAKEX_CACHE) $(dir $(PANDA)) $(PANDA_CACHE)
+$(PANDA): | $(LUAX) $(PANDOC) $(MAKEX_CACHE) $(dir $(PANDA)) $(PANDA_CACHE) $(PLANTUML) $(DITAA)
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Panda$(NORMAL)"
 	@test -f $(@) \
 	|| \
@@ -546,7 +546,7 @@ $(PANDA): | $(LUAX) $(PANDOC) $(MAKEX_CACHE) $(dir $(PANDA)) $(PANDA_CACHE)
 	    ) \
 	    && cd $(MAKEX_CACHE)/panda \
 	    && git checkout $(PANDA_VERSION) \
-	    && make install-all PREFIX=$(realpath $(dir $@)/..) \
+	    && make install PREFIX=$(realpath $(dir $@)/..) \
 	    && sed -i 's#^pandoc #$(PANDOC) #' $@ \
 	)
 
