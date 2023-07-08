@@ -177,7 +177,7 @@ TYPST_COMPILATION ?= no
 
 # TYPST_VERSION is a tag or branch name in the
 # typst repository
-TYPST_VERSION ?= v0.6.0
+TYPST_VERSION ?= 0.6.0
 
 # PLANTUML_VERSION is the PlantUML version to install
 PLANTUML_VERSION = 1.2023.9
@@ -232,6 +232,11 @@ help: welcome
 	    } \
 	} \
 	{ lastLine = $$0 }' $(MAKEFILE_LIST)
+
+# Helper target to read a makex variable
+.PHONY: query
+query:
+	@echo $($(VAR))
 
 .SECONDARY:
 
@@ -566,7 +571,7 @@ $(dir $(TYPST)) $(MAKEX_CACHE)/typst/$(TYPST_VERSION):
 
 ifeq ($(TYPST_COMPILATION),no)
 
-TYPST_URL = https://github.com/typst/typst/releases/download/$(TYPST_VERSION)/$(TYPST_ARCHIVE)
+TYPST_URL = https://github.com/typst/typst/releases/download/v$(TYPST_VERSION)/$(TYPST_ARCHIVE)
 
 ifeq ($(MAKEX_OS)-$(MAKEX_ARCH),Linux-x86_64)
 TYPST_ARCHIVE = typst-x86_64-unknown-linux-musl.tar.xz
@@ -594,7 +599,7 @@ $(TYPST): | $(MAKEX_CACHE) $(dir $(TYPST)) $(CARGO)
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Typst$(NORMAL)"
 	@test -f $(@) \
 	|| \
-	$(CARGO) install --git https://github.com/typst/typst --tag $(TYPST_VERSION) --root $(realpath $(dir $@)/..)
+	$(CARGO) install --git https://github.com/typst/typst --tag v$(TYPST_VERSION) --root $(realpath $(dir $@)/..)
 
 endif
 
