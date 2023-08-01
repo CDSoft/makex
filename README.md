@@ -108,6 +108,8 @@ For a complete documentation, please refer to `makex`:
 #     path to ditaa.jar
 # MERMAID
 #     path to mmdc (Mermaid)
+# PENROSE (alias ROGER)
+#     path to roger (Penrose)
 # GHCUP, GHC, CABAL, STACK
 #     path to the ghcup, ghc, cabal, stack executables
 #     (see https://www.haskell.org/ghcup/)
@@ -136,6 +138,8 @@ For a complete documentation, please refer to `makex`:
 #     install ditaa
 # makex-install-mermaid
 #     install mermaid
+# makex-install-penrose
+#     install penrose
 # makex-install-lsvg
 #     install lsvg
 # makex-install-ghcup
@@ -170,10 +174,10 @@ YPP_VERSION ?= master
 UPP_VERSION ?= master
 
 # PANDOC_VERSION is the version number of pandoc
-PANDOC_VERSION ?= 3.1.5
+PANDOC_VERSION ?= 3.1.6
 
 # PANDOC_CLI_VERSION is the version number of pandoc-cli
-PANDOC_CLI_VERSION ?= 0.1.1
+PANDOC_CLI_VERSION ?= 0.1.1.1
 
 # PANDOC_DYNAMIC_LINK is "no" to download a statically linked executable
 # or "yes" to compile a dynamically linked executable with cabal
@@ -218,10 +222,10 @@ TYPST_COMPILATION ?= no
 
 # TYPST_VERSION is a tag or branch name in the
 # typst repository
-TYPST_VERSION ?= v0.6.0
+TYPST_VERSION ?= 0.6.0
 
 # PLANTUML_VERSION is the PlantUML version to install
-PLANTUML_VERSION = 1.2023.9
+PLANTUML_VERSION = 1.2023.10
 
 # DITAA_VERSION is the ditaa version to install
 DITAA_VERSION = 0.11.0
@@ -568,7 +572,8 @@ It provides several interesting features:
 - conditional blocks
 - file inclusion (e.g. for source code examples)
 - script execution (e.g. to include the result of a command)
-- diagrams (Graphviz, PlantUML, ditaa, Asymptote, blockdiag, mermaid…)
+- diagrams (Graphviz, PlantUML, ditaa, Asymptote, blockdiag, mermaid,
+  Penrose, lsvg…)
 
 The documentation of Panda is here: <http://cdelord.fr/panda>
 

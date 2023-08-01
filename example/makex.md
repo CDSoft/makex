@@ -319,7 +319,7 @@ It provides several interesting features:
 - conditional blocks
 - file inclusion (e.g. for source code examples)
 - script execution (e.g. to include the result of a command)
-- diagrams (Graphviz, PlantUML, ditaa, Asymptote, blockdiag, mermaid…)
+- diagrams (Graphviz, PlantUML, ditaa, Asymptote, blockdiag, mermaid, Penrose, lsvg…)
 
 The documentation of Panda is here: <http://cdelord.fr/panda>
 

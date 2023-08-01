@@ -67,6 +67,8 @@
 #     path to ditaa.jar
 # MERMAID
 #     path to mmdc (Mermaid)
+# PENROSE (alias ROGER)
+#     path to roger (Penrose)
 # GHCUP, GHC, CABAL, STACK
 #     path to the ghcup, ghc, cabal, stack executables
 #     (see https://www.haskell.org/ghcup/)
@@ -95,6 +97,8 @@
 #     install ditaa
 # makex-install-mermaid
 #     install mermaid
+# makex-install-penrose
+#     install penrose
 # makex-install-lsvg
 #     install lsvg
 # makex-install-ghcup
@@ -689,6 +693,29 @@ $(MERMAID): |
 
 makex-install: makex-install-mermaid
 makex-install-mermaid: $(MERMAID)
+
+###########################################################################
+# Penrose
+###########################################################################
+
+PENROSE_MODULE = @penrose/roger
+PENROSE_INSTALL_PATH = $(MAKEX_INSTALL_PATH)/penrose
+PENROSE = $(PENROSE_INSTALL_PATH)/node_modules/.bin/roger
+ROGER = $(PENROSE)
+
+export PATH := $(dir $(PENROSE)):$(PATH)
+
+$(PENROSE): |
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install penrose$(NORMAL)"
+	@test -f $(@) \
+	|| \
+	(   mkdir -p $(PENROSE_INSTALL_PATH) \
+	    && cd $(PENROSE_INSTALL_PATH) \
+	    && npm install $(PENROSE_MODULE) \
+	)
+
+makex-install: makex-install-penrose
+makex-install-penrose: $(PENROSE)
 
 ###########################################################################
 # Panda shortcuts
