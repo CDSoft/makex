@@ -70,6 +70,8 @@ For a complete documentation, please refer to `makex`:
 #     path to the ypp executables (see https://github.com/CDSoft/ypp)
 # UPP
 #     path to the upp executable (see https://github.com/CDSoft/upp)
+# BANG
+#     path to the bang executable (see https://github.com/CDSoft/bang)
 # PANDA
 #     path to the panda script (see https://github.com/CDSoft/panda)
 # PANDOC
@@ -128,6 +130,8 @@ For a complete documentation, please refer to `makex`:
 #     install ypp
 # makex-install-upp
 #     install upp
+# makex-install-bang
+#     install bang
 # makex-install-pandoc
 #     install pandoc
 # makex-install-panda
@@ -172,6 +176,9 @@ YPP_VERSION ?= master
 
 # UPP_VERSION is a tag or branch name in the upp repository
 UPP_VERSION ?= master
+
+# BANG_VERSION is a tag or branch name in the bang repository
+BANG_VERSION ?= master
 
 # PANDOC_VERSION is the version number of pandoc
 PANDOC_VERSION ?= 3.1.6.2

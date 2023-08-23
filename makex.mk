@@ -29,6 +29,8 @@
 #     path to the ypp executables (see https://github.com/CDSoft/ypp)
 # UPP
 #     path to the upp executable (see https://github.com/CDSoft/upp)
+# BANG
+#     path to the bang executable (see https://github.com/CDSoft/bang)
 # PANDA
 #     path to the panda script (see https://github.com/CDSoft/panda)
 # PANDOC
@@ -87,6 +89,8 @@
 #     install ypp
 # makex-install-upp
 #     install upp
+# makex-install-bang
+#     install bang
 # makex-install-pandoc
 #     install pandoc
 # makex-install-panda
@@ -131,6 +135,9 @@ YPP_VERSION ?= master
 
 # UPP_VERSION is a tag or branch name in the upp repository
 UPP_VERSION ?= master
+
+# BANG_VERSION is a tag or branch name in the bang repository
+BANG_VERSION ?= master
 
 # PANDOC_VERSION is the version number of pandoc
 PANDOC_VERSION ?= 3.1.6.2
@@ -413,6 +420,34 @@ $(UPP): | $(LUAX) $(MAKEX_CACHE) $(dir $(UPP))
 
 makex-install: makex-install-upp
 makex-install-upp: $(UPP)
+
+###########################################################################
+# Bang
+###########################################################################
+
+BANG_URL = https://github.com/CDSoft/bang
+BANG = $(MAKEX_INSTALL_PATH)/bang/$(bang_VERSION)/bin/bang
+
+export PATH := $(dir $(BANG)):$(PATH)
+
+$(dir $(BANG)):
+	@mkdir -p $@
+
+$(BANG): | $(LUAX) $(MAKEX_CACHE) $(dir $(BANG))
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Bang$(NORMAL)"
+	@test -f $(@) \
+	|| \
+	(   (   test -d $(MAKEX_CACHE)/bang \
+	        && ( cd $(MAKEX_CACHE)/bang && git pull ) \
+	        || git clone $(BANG_URL) $(MAKEX_CACHE)/bang \
+	    ) \
+	    && cd $(MAKEX_CACHE)/bang \
+	    && git checkout $(BANG_VERSION) \
+	    && ./install.sh $(realpath $(dir $@)/..) \
+	)
+
+makex-install: makex-install-bang
+makex-install-bang: $(BANG)
 
 ###########################################################################
 # Pandoc LaTeX template
