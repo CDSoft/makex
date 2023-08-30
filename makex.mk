@@ -356,7 +356,7 @@ $(LUAX): | $(MAKEX_CACHE) $(dir $(LUAX))
 	    ) \
 	    && cd $(MAKEX_CACHE)/luax \
 	    && git checkout $(LUAX_VERSION) \
-	    && make install-all -j PREFIX=$(realpath $(dir $@)/..) \
+	    && PREFIX=$(realpath $(dir $@)/..) ninja install \
 	)
 
 makex-install: makex-install-luax
