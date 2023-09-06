@@ -387,7 +387,7 @@ $(YPP) $(YPP_LUA) $(YPP_LUAX) $(YPP_PANDOC): | $(LUAX) $(MAKEX_CACHE) $(dir $(YP
 	    ) \
 	    && cd $(MAKEX_CACHE)/ypp \
 	    && git checkout $(YPP_VERSION) \
-	    && make install PREFIX=$(realpath $(dir $@)/..) \
+	    && PREFIX=$(realpath $(dir $@)/..) ninja install \
 	)
 
 makex-install: makex-install-ypp
@@ -443,7 +443,7 @@ $(BANG): | $(LUAX) $(MAKEX_CACHE) $(dir $(BANG))
 	    ) \
 	    && cd $(MAKEX_CACHE)/bang \
 	    && git checkout $(BANG_VERSION) \
-	    && ./install.sh $(realpath $(dir $@)/..) \
+	    && PREFIX=$(realpath $(dir $@)/..) ninja install \
 	)
 
 makex-install: makex-install-bang
@@ -590,7 +590,7 @@ $(PANDA): | $(LUAX) $(PANDOC) $(MAKEX_CACHE) $(dir $(PANDA)) $(PANDA_CACHE) $(PL
 	    ) \
 	    && cd $(MAKEX_CACHE)/panda \
 	    && git checkout $(PANDA_VERSION) \
-	    && make install PREFIX=$(realpath $(dir $@)/..) \
+	    && PREFIX=$(realpath $(dir $@)/..) ninja install \
 	    && sed -i 's#^pandoc #$(PANDOC) #' $@ \
 	)
 
@@ -667,7 +667,7 @@ $(LSVG): | $(LUAX) $(MAKEX_CACHE) $(dir $(LSVG))
 	    ) \
 	    && cd $(MAKEX_CACHE)/lsvg \
 	    && git checkout $(LSVG_VERSION) \
-	    && make install PREFIX=$(realpath $(dir $@)/..) \
+	    && PREFIX=$(realpath $(dir $@)/..) ninja install \
 	)
 
 makex-install: makex-install-lsvg
