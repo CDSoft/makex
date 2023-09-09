@@ -140,7 +140,7 @@ UPP_VERSION ?= master
 BANG_VERSION ?= master
 
 # PANDOC_VERSION is the version number of pandoc
-PANDOC_VERSION ?= 3.1.7
+PANDOC_VERSION ?= 3.1.8
 
 # PANDOC_CLI_VERSION is the version number of pandoc-cli
 PANDOC_CLI_VERSION ?= 0.1.1.1
